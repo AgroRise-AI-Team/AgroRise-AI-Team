@@ -7,8 +7,12 @@ from .views import (
     ChangePasswordView,
     LogoutView,
     LoggedUserLandDetailView,
+    FarmerAgricultureDataView,
+    MarketplaceProductListView,
     SendOTPView,
     VerifyOTPView,
+    ForgotPasswordSendOTPView,
+    ForgotPasswordConfirmView,
 )
 
 urlpatterns = [
@@ -21,6 +25,16 @@ urlpatterns = [
     path('farmer/land-details/', LoggedUserLandDetailView.as_view(), name='farmer_land_details'),
     path('change-password/', ChangePasswordView.as_view(), name='change_password_alt'),
     path('logout/', LogoutView.as_view(), name='logout_alt'),
+
+    # Forgot Password with Email OTP Endpoints
+    path('auth/password-reset/send-otp/', ForgotPasswordSendOTPView.as_view(), name='forgot_pwd_send_otp'),
+    path('auth/password-reset/confirm/', ForgotPasswordConfirmView.as_view(), name='forgot_pwd_confirm'),
+    path('password-reset/send-otp/', ForgotPasswordSendOTPView.as_view(), name='forgot_pwd_send_otp_alt'),
+    path('password-reset/confirm/', ForgotPasswordConfirmView.as_view(), name='forgot_pwd_confirm_alt'),
+
+    # Public / Visitor Agriculture Data Endpoints
+    path('farmers/agriculture-data/', FarmerAgricultureDataView.as_view(), name='farmer_agriculture_data'),
+    path('marketplace/products/', MarketplaceProductListView.as_view(), name='marketplace_products'),
 
     # OTP Verification Endpoints
     path('auth/otp/send/', SendOTPView.as_view(), name='send_otp'),

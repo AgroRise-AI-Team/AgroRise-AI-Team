@@ -157,7 +157,7 @@ export default function RegisterModal({ isOpen, onClose, onSwitchToLogin }) {
   const stepLabels = [
     { n: 1, label: 'Account Details' },
     { n: 2, label: 'Email Verification' },
-    { n: 3, label: 'Farm Profile' },
+    { n: 3, label: formData.profile.role === 'VISITOR' ? 'Preferences' : 'Farm Profile' },
   ];
 
   return (
@@ -245,9 +245,11 @@ export default function RegisterModal({ isOpen, onClose, onSwitchToLogin }) {
                   onChange={handleProfileChange}
                   className="modal-select"
                 >
-                  {USER_ROLES.map(r => (
-                    <option key={r.value} value={r.value}>{r.label}</option>
-                  ))}
+                  <option value="FARMER">Farmer (കർഷകൻ)</option>
+                  <option value="VISITOR">Visitor / Consumer (സന്ദർശകൻ)</option>
+                  <option value="BUYER">Buyer / Trader (വ്യാപാരി)</option>
+                  <option value="BOTH">Farmer & Buyer</option>
+                  <option value="EXPERT">Agricultural Officer / Expert</option>
                 </select>
               </div>
             </div>
@@ -379,107 +381,148 @@ export default function RegisterModal({ isOpen, onClose, onSwitchToLogin }) {
           </div>
         )}
 
-        {/* ─── STEP 3: Farm Profile ─── */}
+        {/* ─── STEP 3: Farm Profile / Visitor Setup ─── */}
         {step === 3 && (
           <form onSubmit={handleSubmit} className="modal-form">
             <div className="step-pane">
-              <div className="form-row-2">
-                <div className="form-group">
-                  <label>District (ജില്ല)</label>
-                  <select
-                    name="district"
-                    value={formData.profile.district}
-                    onChange={handleProfileChange}
-                    className="modal-select"
-                  >
-                    {KERALA_DISTRICTS.map(d => (
-                      <option key={d} value={d}>{d}</option>
-                    ))}
-                  </select>
-                </div>
-                <div className="form-group">
-                  <label>Current Crop (വിള)</label>
-                  <input
-                    type="text"
-                    name="current_crop"
-                    value={formData.profile.current_crop}
-                    onChange={handleProfileChange}
-                    placeholder="e.g. Rice / Paddy, Banana, Coconut"
-                    className="modal-input"
-                    required
-                  />
-                </div>
-              </div>
-
-              <div className="form-row-2">
-                <div className="form-group">
-                  <label>Land Area</label>
-                  <div className="input-group-combo">
-                    <input
-                      type="number"
-                      step="0.1"
-                      name="land_area"
-                      value={formData.profile.land_area}
-                      onChange={handleProfileChange}
-                      className="modal-input"
-                      required
-                    />
-                    <select
-                      name="land_area_unit"
-                      value={formData.profile.land_area_unit}
-                      onChange={handleProfileChange}
-                      className="modal-select-unit"
-                    >
-                      {LAND_AREA_UNITS.map(u => (
-                        <option key={u.value} value={u.value}>{u.label}</option>
-                      ))}
-                    </select>
+              {formData.profile.role === 'VISITOR' ? (
+                <div style={{ padding: '1rem', background: '#f5faf6', borderRadius: '10px', marginBottom: '1.2rem', border: '1px solid #cce3d2' }}>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '0.6rem' }}>
+                    <span style={{ fontSize: '1.4rem' }}>👁️</span>
+                    <h4 style={{ margin: 0, color: '#0b7a3e', fontSize: '1.05rem' }}>Visitor Account Setup</h4>
+                  </div>
+                  <p style={{ fontSize: '0.86rem', color: '#4a6b52', lineHeight: 1.5, margin: '0 0 1rem 0' }}>
+                    As a <strong>Visitor</strong>, you have access to the <strong>Main Agriculture Dashboard</strong> to view real agricultural data, land uploads, and crops published by registered farmers across Kerala.
+                  </p>
+                  <div className="form-row-2">
+                    <div className="form-group">
+                      <label>Primary District of Interest</label>
+                      <select
+                        name="district"
+                        value={formData.profile.district}
+                        onChange={handleProfileChange}
+                        className="modal-select"
+                      >
+                        {KERALA_DISTRICTS.map(d => (
+                          <option key={d} value={d}>{d}</option>
+                        ))}
+                      </select>
+                    </div>
+                    <div className="form-group">
+                      <label>Preferred Language</label>
+                      <select
+                        name="preferred_language"
+                        value={formData.profile.preferred_language}
+                        onChange={handleProfileChange}
+                        className="modal-select"
+                      >
+                        <option value="ml">Malayalam (മലയാളം)</option>
+                        <option value="en">English</option>
+                      </select>
+                    </div>
                   </div>
                 </div>
+              ) : (
+                <>
+                  <div className="form-row-2">
+                    <div className="form-group">
+                      <label>District (ജില്ല)</label>
+                      <select
+                        name="district"
+                        value={formData.profile.district}
+                        onChange={handleProfileChange}
+                        className="modal-select"
+                      >
+                        {KERALA_DISTRICTS.map(d => (
+                          <option key={d} value={d}>{d}</option>
+                        ))}
+                      </select>
+                    </div>
+                    <div className="form-group">
+                      <label>Current Crop (വിള)</label>
+                      <input
+                        type="text"
+                        name="current_crop"
+                        value={formData.profile.current_crop}
+                        onChange={handleProfileChange}
+                        placeholder="e.g. Rice / Paddy, Banana, Coconut"
+                        className="modal-input"
+                        required
+                      />
+                    </div>
+                  </div>
 
-                <div className="form-group">
-                  <label>Soil Type (മണ്ണ്)</label>
-                  <select
-                    name="soil_type"
-                    value={formData.profile.soil_type}
-                    onChange={handleProfileChange}
-                    className="modal-select"
-                  >
-                    {SOIL_TYPES.map(s => (
-                      <option key={s.value} value={s.value}>{s.label}</option>
-                    ))}
-                  </select>
-                </div>
-              </div>
+                  <div className="form-row-2">
+                    <div className="form-group">
+                      <label>Land Area</label>
+                      <div className="input-group-combo">
+                        <input
+                          type="number"
+                          step="0.1"
+                          name="land_area"
+                          value={formData.profile.land_area}
+                          onChange={handleProfileChange}
+                          className="modal-input"
+                          required
+                        />
+                        <select
+                          name="land_area_unit"
+                          value={formData.profile.land_area_unit}
+                          onChange={handleProfileChange}
+                          className="modal-select-unit"
+                        >
+                          {LAND_AREA_UNITS.map(u => (
+                            <option key={u.value} value={u.value}>{u.label}</option>
+                          ))}
+                        </select>
+                      </div>
+                    </div>
 
-              <div className="form-row-2">
-                <div className="form-group">
-                  <label>Water Availability (ജലലഭ്യത)</label>
-                  <select
-                    name="water_availability"
-                    value={formData.profile.water_availability}
-                    onChange={handleProfileChange}
-                    className="modal-select"
-                  >
-                    {WATER_AVAILABILITY.map(w => (
-                      <option key={w.value} value={w.value}>{w.label}</option>
-                    ))}
-                  </select>
-                </div>
+                    <div className="form-group">
+                      <label>Soil Type (മണ്ണ്)</label>
+                      <select
+                        name="soil_type"
+                        value={formData.profile.soil_type}
+                        onChange={handleProfileChange}
+                        className="modal-select"
+                      >
+                        {SOIL_TYPES.map(s => (
+                          <option key={s.value} value={s.value}>{s.label}</option>
+                        ))}
+                      </select>
+                    </div>
+                  </div>
 
-                <div className="form-group">
-                  <label>Language Preference</label>
-                  <select
-                    name="preferred_language"
-                    value={formData.profile.preferred_language}
-                    onChange={handleProfileChange}
-                    className="modal-select"
-                  >
-                    <option value="ml">Malayalam (മലയാളം)</option>
-                    <option value="en">English</option>
-                  </select>
-                </div>
-              </div>
+                  <div className="form-row-2">
+                    <div className="form-group">
+                      <label>Water Availability (ജലലഭ്യത)</label>
+                      <select
+                        name="water_availability"
+                        value={formData.profile.water_availability}
+                        onChange={handleProfileChange}
+                        className="modal-select"
+                      >
+                        {WATER_AVAILABILITY.map(w => (
+                          <option key={w.value} value={w.value}>{w.label}</option>
+                        ))}
+                      </select>
+                    </div>
+
+                    <div className="form-group">
+                      <label>Language Preference</label>
+                      <select
+                        name="preferred_language"
+                        value={formData.profile.preferred_language}
+                        onChange={handleProfileChange}
+                        className="modal-select"
+                      >
+                        <option value="ml">Malayalam (മലയാളം)</option>
+                        <option value="en">English</option>
+                      </select>
+                    </div>
+                  </div>
+                </>
+              )}
 
               <div className="modal-footer-nav">
                 <button type="button" className="btn-back" onClick={() => setStep(2)}>

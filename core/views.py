@@ -155,6 +155,72 @@ class LoggedUserLandDetailView(APIView):
         }, status=status.HTTP_200_OK)
 
 
+# View for visitors and public observers to explore agriculture data uploaded by farmers
+class FarmerAgricultureDataView(APIView):
+    permission_classes = (AllowAny,)
+
+    def get(self, request):
+        district = request.GET.get('district', '').strip()
+        crop = request.GET.get('crop', '').strip()
+        search = request.GET.get('search', '').strip()
+
+        # Fetch profiles that belong strictly to registered farmers
+        queryset = UserProfile.objects.select_related('user').filter(
+            role__in=[UserProfile.Role.FARMER, UserProfile.Role.BOTH]
+        ).order_by('-updated_at')
+
+        if district:
+            queryset = queryset.filter(district__iexact=district)
+        if crop:
+            queryset = queryset.filter(current_crop__icontains=crop)
+        if search:
+            queryset = queryset.filter(
+                Q(user__username__icontains=search) |
+                Q(current_crop__icontains=search) |
+                Q(district__icontains=search) |
+                Q(panchayath_or_village__icontains=search)
+            )
+
+        data = []
+        for profile in queryset:
+            land_image_url = None
+            if profile.land_image:
+                land_image_url = request.build_absolute_uri(profile.land_image.url)
+
+            products = list(profile.user.products.values('id', 'crop_name', 'quantity_available_kg', 'price_per_kg', 'district'))
+
+            data.append({
+                "id": profile.user.id,
+                "farmer_username": profile.user.username,
+                "farmer_display_name": f"{profile.user.first_name} {profile.user.last_name}".strip() or profile.user.username,
+                "role": profile.role,
+                "district": profile.district,
+                "panchayath_or_village": profile.panchayath_or_village,
+                "current_crop": profile.current_crop or "Rice",
+                "growth_stage": profile.growth_stage,
+                "growth_stage_display": profile.get_growth_stage_display(),
+                "land_area": str(profile.land_area),
+                "land_area_unit": profile.land_area_unit,
+                "soil_type": profile.soil_type,
+                "soil_type_display": profile.get_soil_type_display(),
+                "water_availability": profile.water_availability,
+                "water_availability_display": profile.get_water_availability_display(),
+                "primary_water_source": profile.primary_water_source,
+                "primary_water_source_display": profile.get_primary_water_source_display(),
+                "irrigation_method": profile.irrigation_method,
+                "irrigation_method_display": profile.get_irrigation_method_display(),
+                "land_image_url": land_image_url,
+                "is_verified_farmer": profile.is_verified_farmer,
+                "products": products,
+                "updated_at": profile.updated_at,
+            })
+
+        return Response({
+            "total_farmers": len(data),
+            "farmers": data
+        }, status=status.HTTP_200_OK)
+
+
 # 4. Change Password View (APIView - NOT generic)
 class ChangePasswordView(APIView):
     permission_classes = (IsAuthenticated,)
@@ -334,6 +400,142 @@ class VerifyOTPView(APIView):
             "verified": True,
             "message": "Verification successful!",
             "target": target,
+            "tokens": tokens,
+            "user": user_data,
+        }, status=status.HTTP_200_OK)
+
+
+# -------------------------------------------------------------
+# 8. Forgot Password with Email OTP Views
+# -------------------------------------------------------------
+class ForgotPasswordSendOTPView(APIView):
+    permission_classes = (AllowAny,)
+
+    def post(self, request):
+        email = str(request.data.get('email') or '').strip().lower()
+        if not email:
+            return Response(
+                {"error": "Please provide your registered email address."},
+                status=status.HTTP_400_BAD_REQUEST
+            )
+
+        # Check if user exists with this email or username
+        user = User.objects.filter(email__iexact=email).first()
+        if not user:
+            user = User.objects.filter(username__iexact=email).first()
+
+        if not user:
+            return Response(
+                {"error": "No account registered with this email or username."},
+                status=status.HTTP_404_NOT_FOUND
+            )
+
+        target_email = user.email or email
+        cache_key = f"pwd_reset_{target_email}"
+        otp = str(random.randint(100000, 999999))
+        cache.set(cache_key, otp, timeout=300)
+
+        email_sent = False
+        try:
+            subject = "AgroRise AI - Password Reset Code"
+            message = (
+                f"Hello {user.username},\n\n"
+                f"You requested to reset your password for AgroRise AI.\n\n"
+                f"Your 6-digit password reset verification code is:\n"
+                f"    {otp}\n\n"
+                f"This code is valid for 5 minutes. If you did not request this, please disregard this email.\n\n"
+                f"Warm regards,\n"
+                f"AgroRise AI Security Team"
+            )
+            send_mail(
+                subject=subject,
+                message=message,
+                from_email=settings.DEFAULT_FROM_EMAIL,
+                recipient_list=[target_email],
+                fail_silently=False,
+            )
+            email_sent = True
+        except Exception as e:
+            print(f"[Email Warning] Could not send password reset OTP via SMTP: {e}")
+
+        print(f"\n==========================================")
+        print(f"  [AgroRise Password Reset OTP] User: {user.username}")
+        print(f"  [AgroRise Password Reset OTP] Email: {target_email}")
+        print(f"  [AgroRise Password Reset OTP] Code:  {otp}")
+        print(f"  [AgroRise Password Reset OTP] Sent via Gmail: {email_sent}")
+        print(f"==========================================\n")
+
+        return Response({
+            "message": f"Password reset verification code sent to {target_email}.",
+            "email": target_email,
+            "email_sent": email_sent,
+            "dev_otp": otp if not email_sent else None,
+        }, status=status.HTTP_200_OK)
+
+
+class ForgotPasswordConfirmView(APIView):
+    permission_classes = (AllowAny,)
+
+    def post(self, request):
+        email = str(request.data.get('email') or '').strip().lower()
+        otp = str(request.data.get('otp') or '').strip()
+        new_password = str(request.data.get('new_password') or '').strip()
+
+        if not email or not otp or not new_password:
+            return Response(
+                {"error": "Email, verification OTP code, and new password are all required."},
+                status=status.HTTP_400_BAD_REQUEST
+            )
+
+        if len(new_password) < 6:
+            return Response(
+                {"error": "New password must be at least 6 characters long."},
+                status=status.HTTP_400_BAD_REQUEST
+            )
+
+        user = User.objects.filter(email__iexact=email).first()
+        if not user:
+            user = User.objects.filter(username__iexact=email).first()
+
+        if not user:
+            return Response(
+                {"error": "Account not found for this email."},
+                status=status.HTTP_404_NOT_FOUND
+            )
+
+        target_email = user.email or email
+        cache_key = f"pwd_reset_{target_email}"
+        cached_otp = cache.get(cache_key)
+
+        if not cached_otp:
+            return Response(
+                {"error": "OTP has expired or was not requested. Please request a new code."},
+                status=status.HTTP_400_BAD_REQUEST
+            )
+
+        if str(cached_otp).strip() != str(otp).strip():
+            return Response(
+                {"error": "Invalid verification code. Please check and try again."},
+                status=status.HTTP_400_BAD_REQUEST
+            )
+
+        # Clear OTP cache
+        cache.delete(cache_key)
+
+        # Update password
+        user.set_password(new_password)
+        user.save()
+
+        # Generate tokens for immediate login
+        refresh = RefreshToken.for_user(user)
+        tokens = {
+            "refresh": str(refresh),
+            "access": str(refresh.access_token),
+        }
+        user_data = UserSerializer(user).data
+
+        return Response({
+            "message": "Password reset successfully! You are now logged in.",
             "tokens": tokens,
             "user": user_data,
         }, status=status.HTTP_200_OK)

@@ -194,3 +194,37 @@ export const otpApi = {
     });
   }
 };
+
+// Public & Visitor Agriculture Data API
+export const agricultureApi = {
+  async getFarmersAgricultureData(params = {}) {
+    const query = new URLSearchParams(params).toString();
+    return apiRequest(`/api/farmers/agriculture-data/${query ? '?' + query : ''}`, {
+      method: 'GET'
+    });
+  },
+
+  async getMarketplaceProducts(params = {}) {
+    const query = new URLSearchParams(params).toString();
+    return apiRequest(`/api/marketplace/products/${query ? '?' + query : ''}`, {
+      method: 'GET'
+    });
+  }
+};
+
+// Password Reset with Email OTP API
+export const passwordResetApi = {
+  async sendOtp(email) {
+    return apiRequest('/api/auth/password-reset/send-otp/', {
+      method: 'POST',
+      body: JSON.stringify({ email })
+    });
+  },
+
+  async confirmReset(email, otp, newPassword) {
+    return apiRequest('/api/auth/password-reset/confirm/', {
+      method: 'POST',
+      body: JSON.stringify({ email, otp, new_password: newPassword })
+    });
+  }
+};

@@ -6,7 +6,7 @@ import {
   IRRIGATION_METHODS
 } from '../../constants/enums';
 
-export default function ProfileModule() {
+export default function ProfileModule({ isVisitor = false, onGoToDashboard }) {
   const { user, updateProfile } = useAuth();
   const profile = user?.profile || {};
 
@@ -14,16 +14,32 @@ export default function ProfileModule() {
   const [landDetails, setLandDetails] = useState(null);
   const [loadingLand, setLoadingLand] = useState(false);
 
-  // Profile fields state
+  // Profile fields state (initialized only from real user profile data)
   const [editProfile, setEditProfile] = useState({
     growth_stage: profile.growth_stage || 'VEGETATIVE',
     last_estimated_pest_risk: profile.last_estimated_pest_risk || 'MEDIUM',
-    cultivation_budget: profile.cultivation_budget || '75000.00',
-    historical_pest_issues: profile.historical_pest_issues || 'Stem borer',
-    panchayath_or_village: profile.panchayath_or_village || 'Chittur',
-    upi_id: profile.upi_id || 'suresh@oksbi',
+    cultivation_budget: profile.cultivation_budget || '',
+    historical_pest_issues: profile.historical_pest_issues || '',
+    panchayath_or_village: profile.panchayath_or_village || '',
+    upi_id: profile.upi_id || '',
     irrigation_method: profile.irrigation_method || 'FLOOD',
   });
+
+  // Keep editProfile in sync with loaded profile/landDetails data from backend
+  useEffect(() => {
+    const src = landDetails || profile;
+    if (src) {
+      setEditProfile({
+        growth_stage: src.growth_stage || 'VEGETATIVE',
+        last_estimated_pest_risk: src.last_estimated_pest_risk || 'MEDIUM',
+        cultivation_budget: src.cultivation_budget || '',
+        historical_pest_issues: src.historical_pest_issues || '',
+        panchayath_or_village: src.panchayath_or_village || '',
+        upi_id: src.upi_id || '',
+        irrigation_method: src.irrigation_method || 'FLOOD',
+      });
+    }
+  }, [landDetails, profile]);
 
   // File upload fields
   const [idDocFile, setIdDocFile] = useState(null);
@@ -131,6 +147,109 @@ export default function ProfileModule() {
     setImgError(false);
   }, [displayLandImg]);
 
+  if (isVisitor) {
+    return (
+      <div className="module-container">
+        <div className="module-header-box" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+          <div>
+            <span className="module-pill" style={{ background: '#e0f2fe', color: '#0369a1', borderColor: '#bae6fd' }}>
+              Visitor Account • സന്ദർശക അക്കൗണ്ട്
+            </span>
+            <h2>Visitor Profile &amp; Settings</h2>
+            <p>Logged in: <strong>{user?.username}</strong> ({user?.email})</p>
+          </div>
+          {onGoToDashboard && (
+            <button
+              onClick={onGoToDashboard}
+              style={{
+                padding: '10px 18px',
+                background: '#0b7a3e',
+                color: '#fff',
+                border: 'none',
+                borderRadius: '10px',
+                fontWeight: 600,
+                cursor: 'pointer',
+                display: 'flex',
+                alignItems: 'center',
+                gap: '6px'
+              }}
+            >
+              <span>🌾</span>
+              <span>Open Visitors Dashboard →</span>
+            </button>
+          )}
+        </div>
+
+        <div className="profile-dashboard-layout" style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(320px, 1fr))', gap: '24px' }}>
+          <div className="profile-main-col">
+            <div className="settings-card" style={{ background: '#fff', padding: '24px', borderRadius: '16px', border: '1px solid #e1ede4' }}>
+              <h3 style={{ marginTop: 0, color: '#122a1b' }}>👤 Account Details</h3>
+              <p style={{ color: '#555', fontSize: '0.9rem' }}>
+                You have active <strong>Visitor access</strong> to the AgroRise AI platform. You can monitor live farmer crop records and field uploads across Kerala.
+              </p>
+              <div style={{ marginTop: '16px', display: 'flex', flexDirection: 'column', gap: '10px' }}>
+                <div style={{ background: '#f8faf8', padding: '10px 14px', borderRadius: '8px' }}>
+                  <span style={{ fontSize: '0.78rem', color: '#666', display: 'block' }}>Username</span>
+                  <strong style={{ color: '#1a3322' }}>{user?.username}</strong>
+                </div>
+                <div style={{ background: '#f8faf8', padding: '10px 14px', borderRadius: '8px' }}>
+                  <span style={{ fontSize: '0.78rem', color: '#666', display: 'block' }}>Email</span>
+                  <strong style={{ color: '#1a3322' }}>{user?.email || '—'}</strong>
+                </div>
+                <div style={{ background: '#f8faf8', padding: '10px 14px', borderRadius: '8px' }}>
+                  <span style={{ fontSize: '0.78rem', color: '#666', display: 'block' }}>Role</span>
+                  <span style={{ background: '#e0f2fe', color: '#0369a1', padding: '2px 8px', borderRadius: '6px', fontSize: '0.8rem', fontWeight: 700 }}>
+                    VISITOR / OBSERVER
+                  </span>
+                </div>
+                <div style={{ background: '#f8faf8', padding: '10px 14px', borderRadius: '8px' }}>
+                  <span style={{ fontSize: '0.78rem', color: '#666', display: 'block' }}>Primary District of Interest</span>
+                  <strong style={{ color: '#1a3322' }}>{profile.district || 'Palakkad'}</strong>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div className="profile-side-col">
+            <div className="settings-card" style={{ background: '#fff', padding: '24px', borderRadius: '16px', border: '1px solid #e1ede4' }}>
+              <h3 style={{ marginTop: 0, color: '#122a1b' }}>🔑 Change Password</h3>
+              {passMsg && (
+                <div className={`status-alert alert-${passMsg.type}`} style={{ marginBottom: '14px' }}>
+                  {passMsg.text}
+                </div>
+              )}
+              <form onSubmit={handlePasswordChange}>
+                <div className="form-group" style={{ marginBottom: '12px' }}>
+                  <label>Current Password</label>
+                  <input
+                    type="password"
+                    value={oldPassword}
+                    onChange={(e) => setOldPassword(e.target.value)}
+                    className="modal-input"
+                    required
+                  />
+                </div>
+                <div className="form-group" style={{ marginBottom: '16px' }}>
+                  <label>New Password</label>
+                  <input
+                    type="password"
+                    value={newPassword}
+                    onChange={(e) => setNewPassword(e.target.value)}
+                    className="modal-input"
+                    required
+                  />
+                </div>
+                <button type="submit" className="btn-submit" disabled={saving}>
+                  {saving ? 'Updating...' : 'Update Password'}
+                </button>
+              </form>
+            </div>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div className="module-container">
       <div className="module-header-box">
@@ -160,10 +279,10 @@ export default function ProfileModule() {
                 📧 {user?.email} | 📞 {landDetails?.phone_number || profile.phone_number || '—'}
               </p>
               <div className="identity-tags-row">
-                <span className="tag-pill">District: {landDetails?.district || profile.district || 'Palakkad'}</span>
+                <span className="tag-pill">District: {landDetails?.district || profile.district || '—'}</span>
                 <span className="tag-pill">Village: {landDetails?.panchayath_or_village || profile.panchayath_or_village || '—'}</span>
-                <span className="tag-pill">Land: {landDetails?.land_area || profile.land_area || '1.00'} {landDetails?.land_area_unit || profile.land_area_unit || 'ACRES'}</span>
-                <span className="tag-pill">Soil: {landDetails?.soil_type || profile.soil_type || 'LATERITE'}</span>
+                <span className="tag-pill">Land: {landDetails?.land_area || profile.land_area ? `${landDetails?.land_area || profile.land_area} ${landDetails?.land_area_unit || profile.land_area_unit || 'ACRES'}` : '—'}</span>
+                <span className="tag-pill">Soil: {landDetails?.soil_type || profile.soil_type || '—'}</span>
               </div>
             </div>
           </div>
@@ -208,19 +327,19 @@ export default function ProfileModule() {
             <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(140px, 1fr))', gap: '0.8rem', background: '#f4fbf7', padding: '1rem', borderRadius: '8px' }}>
               <div>
                 <small style={{ color: '#666', display: 'block' }}>Current Crop</small>
-                <strong>{landDetails?.current_crop || profile.current_crop || 'Rice'}</strong>
+                <strong>{landDetails?.current_crop || profile.current_crop || '—'}</strong>
               </div>
               <div>
                 <small style={{ color: '#666', display: 'block' }}>Growth Stage</small>
-                <strong>{landDetails?.growth_stage || profile.growth_stage || 'VEGETATIVE'}</strong>
+                <strong>{landDetails?.growth_stage || profile.growth_stage || '—'}</strong>
               </div>
               <div>
                 <small style={{ color: '#666', display: 'block' }}>Water Availability</small>
-                <strong>{landDetails?.water_availability || profile.water_availability || 'MEDIUM'}</strong>
+                <strong>{landDetails?.water_availability || profile.water_availability || '—'}</strong>
               </div>
               <div>
                 <small style={{ color: '#666', display: 'block' }}>Irrigation</small>
-                <strong>{landDetails?.irrigation_method || profile.irrigation_method || 'FLOOD'}</strong>
+                <strong>{landDetails?.irrigation_method || profile.irrigation_method || '—'}</strong>
               </div>
               <div>
                 <small style={{ color: '#666', display: 'block' }}>Soil pH</small>

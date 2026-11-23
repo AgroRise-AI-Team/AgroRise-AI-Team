@@ -17,6 +17,7 @@ class UserProfile(models.Model):
 
     class Role(models.TextChoices):
         FARMER = 'FARMER', 'Farmer'
+        VISITOR = 'VISITOR', 'Visitor'
         BUYER = 'BUYER', 'Buyer'
         BOTH = 'BOTH', 'Farmer & Buyer'
         EXPERT = 'EXPERT', 'Agricultural Officer / Expert'

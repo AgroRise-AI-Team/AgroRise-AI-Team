@@ -63,6 +63,7 @@ export const LAND_AREA_UNITS = [
 // User Roles
 export const USER_ROLES = [
   { value: "FARMER", label: "Farmer (കർഷകൻ)" },
+  { value: "VISITOR", label: "Visitor / Public (സന്ദർശകൻ)" },
   { value: "BUYER", label: "Buyer / Trader (വ്യാപാരി)" },
   { value: "BOTH", label: "Farmer & Buyer" },
   { value: "EXPERT", label: "Agricultural Officer / Expert" }
