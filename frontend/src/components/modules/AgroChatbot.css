@@ -1,0 +1,478 @@
+/* ==========================================================================
+   AgroRise AI - Kisan Mitra Gemini Chatbot Stylesheet
+   Modern, responsive, agricultural emerald & glassmorphic styling
+   ========================================================================== */
+
+/* Floating FAB Button */
+.agro-chat-fab {
+  position: fixed;
+  bottom: 28px;
+  right: 28px;
+  z-index: 9999;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  background: linear-gradient(135deg, #059669 0%, #047857 100%);
+  color: #ffffff;
+  border: none;
+  border-radius: 50px;
+  padding: 12px 22px 12px 16px;
+  font-family: inherit;
+  font-size: 0.95rem;
+  font-weight: 700;
+  box-shadow: 0 10px 25px -5px rgba(5, 150, 105, 0.45), 0 8px 10px -6px rgba(5, 150, 105, 0.3);
+  cursor: pointer;
+  transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+.agro-chat-fab:hover {
+  transform: translateY(-3px) scale(1.03);
+  box-shadow: 0 16px 30px -5px rgba(5, 150, 105, 0.55);
+  background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+}
+
+.agro-chat-fab:active {
+  transform: translateY(0) scale(0.98);
+}
+
+.fab-avatar-badge {
+  position: relative;
+  width: 36px;
+  height: 36px;
+  background: rgba(255, 255, 255, 0.2);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.25rem;
+}
+
+.fab-pulse-dot {
+  position: absolute;
+  top: -2px;
+  right: -2px;
+  width: 11px;
+  height: 11px;
+  background: #34d399;
+  border: 2px solid #047857;
+  border-radius: 50%;
+  animation: pulse-ring 2s infinite ease-out;
+}
+
+@keyframes pulse-ring {
+  0% { transform: scale(0.9); opacity: 1; }
+  50% { transform: scale(1.3); opacity: 0.7; }
+  100% { transform: scale(0.9); opacity: 1; }
+}
+
+/* Floating Window Container */
+.agro-chat-floating-window {
+  position: fixed;
+  bottom: 88px;
+  right: 28px;
+  width: 420px;
+  max-width: calc(100vw - 36px);
+  height: 620px;
+  max-height: calc(100vh - 120px);
+  background: #ffffff;
+  border-radius: 20px;
+  box-shadow: 0 20px 45px -10px rgba(0, 0, 0, 0.22), 0 0 1px 1px rgba(0, 0, 0, 0.05);
+  z-index: 10000;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  animation: slideUpFade 0.3s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  border: 1px solid rgba(5, 150, 105, 0.2);
+}
+
+@keyframes slideUpFade {
+  from {
+    opacity: 0;
+    transform: translateY(20px) scale(0.96);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+/* Full Tab Container (when loaded as main screen tab) */
+.agro-chat-full-page {
+  max-width: 960px;
+  margin: 0 auto;
+  height: calc(100vh - 140px);
+  min-height: 580px;
+  background: #ffffff;
+  border-radius: 20px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+  border: 1px solid #e5e7eb;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+/* Chat Header */
+.agro-chat-header {
+  background: linear-gradient(135deg, #065f46 0%, #047857 60%, #059669 100%);
+  color: #ffffff;
+  padding: 16px 20px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+}
+
+.header-left {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.bot-avatar-circle {
+  width: 44px;
+  height: 44px;
+  background: rgba(255, 255, 255, 0.18);
+  backdrop-filter: blur(8px);
+  border: 1.5px solid rgba(255, 255, 255, 0.35);
+  border-radius: 14px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.45rem;
+}
+
+.bot-info-title {
+  font-size: 1.05rem;
+  font-weight: 700;
+  margin: 0;
+  color: #ffffff;
+}
+
+.bot-status-tag {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 0.76rem;
+  color: #a7f3d0;
+  font-weight: 500;
+  margin-top: 2px;
+}
+
+.status-active-bullet {
+  width: 7px;
+  height: 7px;
+  background: #34d399;
+  border-radius: 50%;
+  box-shadow: 0 0 8px #34d399;
+}
+
+.header-actions {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.header-icon-btn {
+  background: rgba(255, 255, 255, 0.12);
+  border: none;
+  color: #ffffff;
+  width: 32px;
+  height: 32px;
+  border-radius: 8px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.9rem;
+  transition: background 0.2s;
+}
+
+.header-icon-btn:hover {
+  background: rgba(255, 255, 255, 0.25);
+}
+
+/* Chat Messages Stream Area */
+.agro-chat-stream {
+  flex: 1;
+  overflow-y: auto;
+  padding: 20px;
+  background: #f8fafc;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+/* Welcome Hero Box inside Chat */
+.chat-welcome-hero {
+  background: linear-gradient(145deg, #ecfdf5 0%, #f0fdf4 100%);
+  border: 1px solid #a7f3d0;
+  border-radius: 16px;
+  padding: 16px 18px;
+  margin-bottom: 6px;
+}
+
+.welcome-title-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 0.98rem;
+  font-weight: 700;
+  color: #065f46;
+  margin-bottom: 6px;
+}
+
+.welcome-text {
+  font-size: 0.86rem;
+  color: #1f2937;
+  line-height: 1.45;
+  margin: 0 0 12px 0;
+}
+
+/* Suggestion Pills */
+.chat-suggestions-group {
+  margin-top: 10px;
+}
+
+.suggestions-label {
+  font-size: 0.76rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: #059669;
+  margin-bottom: 8px;
+}
+
+.suggestions-grid {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.suggestion-chip-btn {
+  background: #ffffff;
+  border: 1px solid #d1fae5;
+  border-radius: 10px;
+  padding: 8px 12px;
+  text-align: left;
+  font-size: 0.82rem;
+  color: #065f46;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  line-height: 1.35;
+  font-weight: 500;
+}
+
+.suggestion-chip-btn:hover {
+  background: #059669;
+  color: #ffffff;
+  border-color: #059669;
+  transform: translateX(3px);
+}
+
+/* Individual Message Bubbles */
+.chat-bubble-row {
+  display: flex;
+  gap: 10px;
+  align-items: flex-start;
+}
+
+.chat-bubble-row.user-row {
+  flex-direction: row-reverse;
+}
+
+.message-avatar {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.95rem;
+  flex-shrink: 0;
+}
+
+.user-avatar {
+  background: #0284c7;
+  color: #ffffff;
+}
+
+.bot-avatar {
+  background: #059669;
+  color: #ffffff;
+}
+
+.message-card {
+  max-width: 82%;
+  padding: 12px 16px;
+  border-radius: 16px;
+  position: relative;
+  font-size: 0.9rem;
+  line-height: 1.5;
+  word-break: break-word;
+}
+
+.user-row .message-card {
+  background: #047857;
+  color: #ffffff;
+  border-bottom-right-radius: 4px;
+}
+
+.bot-row .message-card {
+  background: #ffffff;
+  color: #1f2937;
+  border: 1px solid #e2e8f0;
+  border-bottom-left-radius: 4px;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.04);
+}
+
+.message-timestamp {
+  display: block;
+  font-size: 0.7rem;
+  margin-top: 6px;
+  opacity: 0.75;
+  text-align: right;
+}
+
+/* Formatted Text Inside Bot Responses */
+.bot-formatted-content p {
+  margin: 0 0 8px 0;
+}
+
+.bot-formatted-content p:last-child {
+  margin-bottom: 0;
+}
+
+.bot-formatted-content ul, .bot-formatted-content ol {
+  margin: 6px 0 8px 18px;
+  padding: 0;
+}
+
+.bot-formatted-content li {
+  margin-bottom: 4px;
+}
+
+.bot-formatted-content strong {
+  color: #065f46;
+}
+
+/* Typing Thinking Indicator */
+.bot-typing-indicator {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 12px 18px;
+  background: #ffffff;
+  border: 1px solid #e2e8f0;
+  border-radius: 16px;
+  border-bottom-left-radius: 4px;
+  width: fit-content;
+}
+
+.typing-dot {
+  width: 8px;
+  height: 8px;
+  background: #10b981;
+  border-radius: 50%;
+  animation: bounceDot 1.4s infinite ease-in-out;
+}
+
+.typing-dot:nth-child(2) {
+  animation-delay: 0.2s;
+}
+
+.typing-dot:nth-child(3) {
+  animation-delay: 0.4s;
+}
+
+@keyframes bounceDot {
+  0%, 80%, 100% {
+    transform: scale(0.6);
+    opacity: 0.4;
+  }
+  40% {
+    transform: scale(1.1);
+    opacity: 1;
+  }
+}
+
+.typing-label {
+  font-size: 0.8rem;
+  color: #059669;
+  font-weight: 600;
+  margin-left: 6px;
+}
+
+/* Chat Input Bar */
+.agro-chat-footer {
+  padding: 14px 18px;
+  background: #ffffff;
+  border-top: 1px solid #e5e7eb;
+}
+
+.chat-input-form {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.chat-text-input {
+  flex: 1;
+  background: #f1f5f9;
+  border: 1.5px solid transparent;
+  border-radius: 12px;
+  padding: 12px 14px;
+  font-size: 0.9rem;
+  color: #0f172a;
+  outline: none;
+  transition: all 0.2s;
+  font-family: inherit;
+}
+
+.chat-text-input:focus {
+  background: #ffffff;
+  border-color: #059669;
+  box-shadow: 0 0 0 3px rgba(5, 150, 105, 0.15);
+}
+
+.chat-send-btn {
+  background: #059669;
+  color: #ffffff;
+  border: none;
+  border-radius: 12px;
+  padding: 12px 16px;
+  font-size: 0.9rem;
+  font-weight: 700;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  transition: all 0.2s;
+  flex-shrink: 0;
+}
+
+.chat-send-btn:hover:not(:disabled) {
+  background: #047857;
+  transform: translateY(-1px);
+}
+
+.chat-send-btn:disabled {
+  background: #cbd5e1;
+  cursor: not-allowed;
+  transform: none;
+}
+
+.chat-footer-note {
+  font-size: 0.7rem;
+  color: #94a3b8;
+  text-align: center;
+  margin-top: 8px;
+}
+
+@media (max-width: 640px) {
+  .agro-chat-floating-window {
+    right: 12px;
+    bottom: 78px;
+    width: calc(100vw - 24px);
+    height: 520px;
+  }
+}

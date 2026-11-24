@@ -6,6 +6,7 @@ import ProfileModule from './components/modules/ProfileModule';
 import MainDashboard from './components/modules/MainDashboard';
 import SmartLandAnalyzer from './components/modules/SmartLandAnalyzer';
 import CropProfitEstimator from './components/modules/CropProfitEstimator';
+import AgroChatbot from './components/modules/AgroChatbot';
 
 import './App.css';
 
@@ -55,10 +56,14 @@ function MainApp() {
         {activeTab === 'dashboard' && <MainDashboard />}
         {activeTab === 'land_analyzer' && <SmartLandAnalyzer />}
         {activeTab === 'profit_estimator' && <CropProfitEstimator />}
+        {activeTab === 'ai_chat' && <AgroChatbot isFullPage={true} />}
         {activeTab === 'profile' && (
           <ProfileModule isVisitor={!isFarmer} onGoToDashboard={() => setActiveTab('dashboard')} />
         )}
       </main>
+
+      {/* Floating Gemini AI Assistant Accessible from Any Screen */}
+      {activeTab !== 'ai_chat' && <AgroChatbot isFullPage={false} />}
     </div>
   );
 }

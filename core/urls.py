@@ -31,6 +31,11 @@ from .news_views import (
     AgriNewsRefreshView,
 )
 
+from .chat_views import (
+    AgroChatbotView,
+    AgroChatSuggestionsView,
+)
+
 urlpatterns = [
     # Auth endpoints
     path('register/', RegisterView.as_view(), name='register_alt'),
@@ -80,6 +85,11 @@ urlpatterns = [
     # AI Agricultural News Analyzer Endpoints
     path('news/latest/', AgriNewsListView.as_view(), name='agri_news_latest'),
     path('news/refresh/', AgriNewsRefreshView.as_view(), name='agri_news_refresh'),
+
+    # Gemini AI Agricultural Chatbot Endpoints
+    path('chat/', AgroChatbotView.as_view(), name='agri_chat'),
+    path('ai/chat/', AgroChatbotView.as_view(), name='agri_chat_alt'),
+    path('chat/suggestions/', AgroChatSuggestionsView.as_view(), name='agri_chat_suggestions'),
 ]
 
 

@@ -298,6 +298,23 @@ export const newsApi = {
   }
 };
 
+// Module: Gemini AI Agricultural Chatbot API
+export const chatApi = {
+  async sendMessage(message, history = [], language = 'en') {
+    return apiRequest('/api/chat/', {
+      method: 'POST',
+      body: JSON.stringify({ message, history, language })
+    });
+  },
+
+  async getSuggestions(language = 'en') {
+    return apiRequest(`/api/chat/suggestions/?language=${encodeURIComponent(language)}`, {
+      method: 'GET'
+    });
+  }
+};
+
+
 
 
 

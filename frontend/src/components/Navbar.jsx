@@ -61,6 +61,16 @@ export default function Navbar({ activeTab = 'dashboard', onSelectTab }) {
             <span>{t.tabProfitEstimator}</span>
           </button>
 
+          <button
+            type="button"
+            className={`nav-tab-btn ${activeTab === 'ai_chat' ? 'active' : ''}`}
+            onClick={() => onSelectTab && onSelectTab('ai_chat')}
+            title="Chat with AgroRise Gemini AI Assistant"
+          >
+            <span className="tab-icon">🤖</span>
+            <span>{t.tabChatbot || 'AI Kisan Mitra'}</span>
+          </button>
+
 
           <button
             type="button"

@@ -105,7 +105,20 @@ export const TRANSLATIONS = {
     totalCultivationCost: 'Total Production Cost',
     netProfit: 'Estimated Net Profit',
     roiPercentage: 'Return on Investment (ROI)',
-    breakEvenPeriod: 'Break-Even Harvest Time'
+    breakEvenPeriod: 'Break-Even Harvest Time',
+
+    // AI Chatbot
+    tabChatbot: 'AI Kisan Mitra',
+    chatTitle: 'AgroRise Kisan Mitra AI',
+    chatSubtitle: 'Gemini AI Agricultural Specialist & Farmer Advisory',
+    chatOnlineStatus: 'Online • Gemini AI',
+    chatPlaceholder: 'Ask about crop disease, soil, weather, fertilizer, subsidy...',
+    chatSend: 'Send',
+    chatThinking: 'Kisan Mitra is thinking...',
+    chatClear: 'Clear Chat',
+    chatSuggestedPrompt: 'Common Farmer Questions:',
+    chatWelcomeTitle: 'Namaskaram! How can I help your farm today?',
+    chatWelcomeDesc: 'Ask questions in English or Malayalam about crop diseases, pest remedies, fertilizer doses, weather alerts, or government subsidies.'
   },
 
   ml: {
@@ -210,6 +223,19 @@ export const TRANSLATIONS = {
     totalCultivationCost: 'ആകെ കൃഷിച്ചെലവ്',
     netProfit: 'പ്രതീക്ഷിക്കുന്ന അറ്റാദായം',
     roiPercentage: 'ലാഭ ശതമാനം (ROI)',
-    breakEvenPeriod: 'മുതൽമുടക്ക് തിരിച്ചുകിട്ടുന്ന സമയം'
+    breakEvenPeriod: 'മുതൽമുടക്ക് തിരിച്ചുകിട്ടുന്ന സമയം',
+
+    // AI Chatbot
+    tabChatbot: 'കിസാൻ മിത്രം എ.ഐ',
+    chatTitle: 'അഗ്രോറൈസ് കിസാൻ മിത്രം AI',
+    chatSubtitle: 'ജെമിനി എ.ഐ കാർഷിക വിദഗ്ദ്ധൻ & കർഷക സഹായി',
+    chatOnlineStatus: 'സജീവം • ജെമിനി AI',
+    chatPlaceholder: 'വിള രോഗങ്ങൾ, വളപ്രയോഗം, കാലാവസ്ഥ, സബ്സിഡികൾ ചോദിക്കൂ...',
+    chatSend: 'ചോദിക്കുക',
+    chatThinking: 'കിസാൻ മിത്രം മറുപടി തയ്യാറാക്കുന്നു...',
+    chatClear: 'ചാറ്റ് ഒഴിവാക്കുക',
+    chatSuggestedPrompt: 'കർഷകർ പതിവായി ചോദിക്കുന്ന ചോദ്യങ്ങൾ:',
+    chatWelcomeTitle: 'നമസ്കാരം! നിങ്ങളുടെ കൃഷിയെക്കുറിച്ച് എന്ത് സംശയമാണ് ഉള്ളത്?',
+    chatWelcomeDesc: 'വിള രോഗങ്ങൾ, കീടനാശിനികൾ, വളങ്ങൾ, മണ്ണ് പരിശോധന, സർക്കാർ സബ്സിഡികൾ എന്നിവയെക്കുറിച്ച് മലയാളത്തിലോ ഇംഗ്ലീഷിലോ ചോദിക്കാം.'
   }
 };
