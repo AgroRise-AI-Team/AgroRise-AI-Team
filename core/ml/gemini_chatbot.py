@@ -9,14 +9,22 @@ import json
 import logging
 import urllib.request
 import urllib.error
+from pathlib import Path
+from dotenv import load_dotenv
 from .rag_engine import get_rag_context_and_sources
 
 logger = logging.getLogger(__name__)
 
+# Ensure .env is loaded
+BASE_DIR = Path(__file__).resolve().parent.parent.parent
+load_dotenv(BASE_DIR / '.env')
+
+# Proven active Google AI Studio models (prioritizing fast, low-latency, active models)
 GEMINI_MODELS = [
-    "gemini-1.5-flash",
-    "gemini-2.0-flash",
-    "gemini-2.5-flash",
+    "gemini-flash-lite-latest",
+    "gemini-3.1-flash-lite",
+    "gemini-3.1-flash-lite-preview",
+    "gemini-flash-latest",
 ]
 
 BASE_SYSTEM_PROMPT = """You are "AgroRise Kisan Mitra" (അഗ്രോറൈസ് കിസാൻ മിത്രം), an expert AI Agronomist and Agricultural Specialist for AgroRise AI.

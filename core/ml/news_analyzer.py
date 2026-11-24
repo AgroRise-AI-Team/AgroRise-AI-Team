@@ -166,7 +166,7 @@ def analyze_with_gemini(raw_articles):
     if not api_key or api_key == "your_gemini_api_key_here":
         return None
 
-    gemini_url = f"https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key={api_key}"
+    active_models = ["gemini-flash-lite-latest", "gemini-3.1-flash-lite", "gemini-3.1-flash-lite-preview"]
 
     prompt = """
 You are an expert bilingual Agricultural AI for Kerala and Indian farmers.
@@ -200,40 +200,44 @@ News articles to analyze:
         }
     }
 
-    try:
-        data_bytes = json.dumps(payload).encode("utf-8")
-        req = urllib.request.Request(
-            gemini_url,
-            data=data_bytes,
-            headers={"Content-Type": "application/json"},
-            method="POST"
-        )
-        with urllib.request.urlopen(req, timeout=10) as response:
-            res_json = json.loads(response.read().decode("utf-8"))
-            candidate = res_json.get("candidates", [{}])[0]
-            text_content = candidate.get("content", {}).get("parts", [{}])[0].get("text", "")
+    data_bytes = json.dumps(payload).encode("utf-8")
 
-            cleaned_text = text_content.strip()
-            if cleaned_text.startswith("```"):
-                lines = cleaned_text.splitlines()
-                if lines[0].startswith("```"):
-                    lines = lines[1:]
-                if lines and lines[-1].startswith("```"):
-                    lines = lines[:-1]
-                cleaned_text = "\n".join(lines).strip()
+    for model_name in active_models:
+        gemini_url = f"https://generativelanguage.googleapis.com/v1beta/models/{model_name}:generateContent?key={api_key}"
+        try:
+            req = urllib.request.Request(
+                gemini_url,
+                data=data_bytes,
+                headers={"Content-Type": "application/json"},
+                method="POST"
+            )
+            with urllib.request.urlopen(req, timeout=10) as response:
+                res_json = json.loads(response.read().decode("utf-8"))
+                candidate = res_json.get("candidates", [{}])[0]
+                text_content = candidate.get("content", {}).get("parts", [{}])[0].get("text", "")
 
-            parsed = json.loads(cleaned_text)
-            if isinstance(parsed, list) and len(parsed) > 0:
-                for idx, item in enumerate(parsed):
-                    item["id"] = f"gemini-{idx+1}"
-                    if idx < len(raw_articles):
-                        item["link"] = raw_articles[idx].get("link", "#")
-                        item["published_at"] = raw_articles[idx].get("published_at", "Recently")
-                        if not item.get("source"):
-                            item["source"] = raw_articles[idx].get("source", "Agri News")
-                return parsed
-    except Exception as e:
-        logger.error(f"Gemini API analysis error: {e}")
+                cleaned_text = text_content.strip()
+                if cleaned_text.startswith("```"):
+                    lines = cleaned_text.splitlines()
+                    if lines[0].startswith("```"):
+                        lines = lines[1:]
+                    if lines and lines[-1].startswith("```"):
+                        lines = lines[:-1]
+                    cleaned_text = "\n".join(lines).strip()
+
+                parsed = json.loads(cleaned_text)
+                if isinstance(parsed, list) and len(parsed) > 0:
+                    for idx, item in enumerate(parsed):
+                        item["id"] = f"gemini-{idx+1}"
+                        if idx < len(raw_articles):
+                            item["link"] = raw_articles[idx].get("link", "#")
+                            item["published_at"] = raw_articles[idx].get("published_at", "Recently")
+                            if not item.get("source"):
+                                item["source"] = raw_articles[idx].get("source", "Agri News")
+                    return parsed
+        except Exception as e:
+            logger.warning(f"Gemini API analysis attempt with {model_name} failed: {e}")
+            continue
 
     return None
 
