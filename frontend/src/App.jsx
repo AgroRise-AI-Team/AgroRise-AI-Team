@@ -4,8 +4,11 @@ import EntryPage from './components/EntryPage';
 import Navbar from './components/Navbar';
 import ProfileModule from './components/modules/ProfileModule';
 import MainDashboard from './components/modules/MainDashboard';
+import SmartLandAnalyzer from './components/modules/SmartLandAnalyzer';
+import CropProfitEstimator from './components/modules/CropProfitEstimator';
 
 import './App.css';
+
 
 function MainApp() {
   const { isAuthenticated, loading, user } = useAuth();
@@ -49,9 +52,10 @@ function MainApp() {
       <Navbar activeTab={activeTab} onSelectTab={setActiveTab} />
 
       <main className="dashboard-main-content">
-        {activeTab === 'dashboard' ? (
-          <MainDashboard />
-        ) : (
+        {activeTab === 'dashboard' && <MainDashboard />}
+        {activeTab === 'land_analyzer' && <SmartLandAnalyzer />}
+        {activeTab === 'profit_estimator' && <CropProfitEstimator />}
+        {activeTab === 'profile' && (
           <ProfileModule isVisitor={!isFarmer} onGoToDashboard={() => setActiveTab('dashboard')} />
         )}
       </main>

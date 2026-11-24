@@ -228,3 +228,54 @@ export const passwordResetApi = {
     });
   }
 };
+
+// Module 2: Smart Land Analyzer API
+export const smartLandAnalyzerApi = {
+  async analyze(data) {
+    return apiRequest('/api/smart-land-analyzer/analyze/', {
+      method: 'POST',
+      body: JSON.stringify(data)
+    });
+  },
+
+  async getMetadata() {
+    return apiRequest('/api/smart-land-analyzer/metadata/', {
+      method: 'GET'
+    });
+  },
+
+  async getLocationProfile(district) {
+    return apiRequest(`/api/smart-land-analyzer/location-profile/?district=${encodeURIComponent(district)}`, {
+      method: 'GET'
+    });
+  },
+
+  async getNearbyFacilities(district, lat, lng) {
+    const params = new URLSearchParams({ district });
+    if (lat) params.append('lat', lat);
+    if (lng) params.append('lng', lng);
+    return apiRequest(`/api/smart-land-analyzer/nearby-facilities/?${params.toString()}`, {
+      method: 'GET'
+    });
+  }
+};
+
+
+// Module 4: Crop Profit Estimator API
+export const cropProfitEstimatorApi = {
+  async calculateProfit(data) {
+    return apiRequest('/api/crop-profit-estimator/calculate/', {
+      method: 'POST',
+      body: JSON.stringify(data)
+    });
+  },
+
+  async getCrops() {
+    return apiRequest('/api/crop-profit-estimator/crops/', {
+      method: 'GET'
+    });
+  }
+};
+
+
+

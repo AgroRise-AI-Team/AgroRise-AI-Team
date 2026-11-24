@@ -45,6 +45,25 @@ export default function Navbar({ activeTab = 'dashboard', onSelectTab }) {
 
           <button
             type="button"
+            className={`nav-tab-btn ${activeTab === 'land_analyzer' ? 'active' : ''}`}
+            onClick={() => onSelectTab && onSelectTab('land_analyzer')}
+          >
+            <span className="tab-icon">🗺️</span>
+            <span>Smart Land Analyzer</span>
+          </button>
+
+          <button
+            type="button"
+            className={`nav-tab-btn ${activeTab === 'profit_estimator' ? 'active' : ''}`}
+            onClick={() => onSelectTab && onSelectTab('profit_estimator')}
+          >
+            <span className="tab-icon">💰</span>
+            <span>Profit Estimator</span>
+          </button>
+
+
+          <button
+            type="button"
             className={`nav-tab-btn ${activeTab === 'profile' ? 'active' : ''}`}
             onClick={() => onSelectTab && onSelectTab('profile')}
           >

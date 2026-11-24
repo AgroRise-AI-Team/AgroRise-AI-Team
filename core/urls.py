@@ -14,6 +14,17 @@ from .views import (
     ForgotPasswordSendOTPView,
     ForgotPasswordConfirmView,
 )
+from .land_analyzer_views import (
+    SmartLandAnalyzerView,
+    SmartLandAnalyzerMetadataView,
+    SmartLandDistrictProfileView,
+    SmartLandNearbyFacilitiesView,
+)
+
+from .profit_estimator_views import (
+    CropProfitCalculateView,
+    CropProfitMetadataView,
+)
 
 urlpatterns = [
     # Auth endpoints
@@ -25,6 +36,25 @@ urlpatterns = [
     path('farmer/land-details/', LoggedUserLandDetailView.as_view(), name='farmer_land_details'),
     path('change-password/', ChangePasswordView.as_view(), name='change_password_alt'),
     path('logout/', LogoutView.as_view(), name='logout_alt'),
+
+    # Module 2: Smart Land Analyzer AI/ML Endpoints
+    path('smart-land-analyzer/analyze/', SmartLandAnalyzerView.as_view(), name='smart_land_analyze'),
+    path('smart-land-analyzer/metadata/', SmartLandAnalyzerMetadataView.as_view(), name='smart_land_metadata'),
+    path('smart-land-analyzer/location-profile/', SmartLandDistrictProfileView.as_view(), name='smart_land_location_profile'),
+    path('smart-land-analyzer/nearby-facilities/', SmartLandNearbyFacilitiesView.as_view(), name='smart_land_nearby_facilities'),
+    path('land-analyzer/analyze/', SmartLandAnalyzerView.as_view(), name='land_analyze_shortcut'),
+    path('land-analyzer/metadata/', SmartLandAnalyzerMetadataView.as_view(), name='land_metadata_shortcut'),
+    path('land-analyzer/location-profile/', SmartLandDistrictProfileView.as_view(), name='land_location_profile_shortcut'),
+    path('land-analyzer/nearby-facilities/', SmartLandNearbyFacilitiesView.as_view(), name='land_nearby_facilities_shortcut'),
+
+
+    # Module 4: Crop Profit Estimator Endpoints
+    path('crop-profit-estimator/calculate/', CropProfitCalculateView.as_view(), name='crop_profit_calculate'),
+    path('crop-profit-estimator/crops/', CropProfitMetadataView.as_view(), name='crop_profit_crops'),
+    path('profit-estimator/calculate/', CropProfitCalculateView.as_view(), name='profit_calc_shortcut'),
+    path('profit-estimator/crops/', CropProfitMetadataView.as_view(), name='profit_crops_shortcut'),
+
+
 
     # Forgot Password with Email OTP Endpoints
     path('auth/password-reset/send-otp/', ForgotPasswordSendOTPView.as_view(), name='forgot_pwd_send_otp'),
@@ -42,5 +72,6 @@ urlpatterns = [
     path('otp/send/', SendOTPView.as_view(), name='send_otp_alt'),
     path('otp/verify/', VerifyOTPView.as_view(), name='verify_otp_alt'),
 ]
+
 
 
