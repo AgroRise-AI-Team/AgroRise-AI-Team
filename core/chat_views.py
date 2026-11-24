@@ -9,7 +9,7 @@ from rest_framework import status
 from rest_framework.permissions import AllowAny
 from datetime import datetime
 
-from .ml.gemini_chatbot import query_gemini_chat
+from .ml.gemini_chatbot import query_gemini_chat_with_rag
 
 SUGGESTIONS = {
     "en": [
@@ -52,11 +52,14 @@ class AgroChatbotView(APIView):
             )
 
         try:
-            ai_reply = query_gemini_chat(message=message, history=history, language=language)
+            rag_result = query_gemini_chat_with_rag(message=message, history=history, language=language)
 
             return Response({
                 "status": "success",
-                "reply": ai_reply,
+                "reply": rag_result.get("reply", ""),
+                "sources": rag_result.get("sources", []),
+                "grounded_by_rag": rag_result.get("grounded_by_rag", True),
+                "model": rag_result.get("model", "gemini-1.5-flash"),
                 "timestamp": datetime.utcnow().strftime("%Y-%m-%d %H:%M:%S UTC"),
                 "language": language
             }, status=status.HTTP_200_OK)

@@ -91,6 +91,8 @@ export default function AgroChatbot({ isFullPage = false, onClose }) {
         id: Date.now() + 1,
         sender: 'bot',
         text: response.reply || (language === 'ml' ? 'ക്ഷമിക്കണം, പ്രതികരണം ലഭ്യമാക്കാൻ കഴിഞ്ഞില്ല.' : 'Sorry, could not retrieve a response.'),
+        sources: response.sources || [],
+        grounded: response.grounded_by_rag,
         time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
       };
 
@@ -255,7 +257,18 @@ export default function AgroChatbot({ isFullPage = false, onClose }) {
 
             <div className="message-card">
               {msg.sender === 'bot' ? (
-                renderFormattedText(msg.text)
+                <>
+                  {renderFormattedText(msg.text)}
+                  {msg.sources && msg.sources.length > 0 && (
+                    <div className="rag-sources-pill" title="Information grounded with verified agricultural literature">
+                      <span className="rag-pill-icon">🏛️</span>
+                      <span className="rag-pill-text">
+                        {language === 'ml' ? 'ആധാരം: ' : 'Verified Source: '}
+                        {msg.sources.join(' • ')}
+                      </span>
+                    </div>
+                  )}
+                </>
               ) : (
                 <div className="user-message-text">{msg.text}</div>
               )}
