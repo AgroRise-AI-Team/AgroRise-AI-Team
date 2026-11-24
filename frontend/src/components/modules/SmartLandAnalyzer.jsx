@@ -6,7 +6,7 @@ import LeafletLocationPicker from '../common/LeafletLocationPicker';
 
 
 export default function SmartLandAnalyzer() {
-  const { user } = useAuth();
+  const { user, language, t } = useAuth();
 
   // Mode: 'simple' (Farmer-friendly, fast) vs 'detailed' (Soil-test & scientific)
   const [inputMode, setInputMode] = useState('simple');
@@ -224,15 +224,17 @@ export default function SmartLandAnalyzer() {
               fontWeight: '700',
               marginBottom: '8px'
             }}>
-              <span>🌱 Module 2 • Smart Land Analyzer</span>
+              <span>🌱 {language === 'ml' ? 'സ്മാർട്ട് ലാൻഡ് അനലൈസർ' : 'Module 2 • Smart Land Analyzer'}</span>
               <span>•</span>
               <span>Kerala Krishi AI</span>
             </div>
             <h1 style={{ fontSize: '1.8rem', fontWeight: '800', margin: '0 0 6px 0', letterSpacing: '-0.5px' }}>
-              🌾 Location-Smart Land & Culture Recommender
+              {language === 'ml' ? '🌾 കൃഷിഭൂമി പരിശോധനയും അനുയോജ്യ വിള നിർദ്ദേശവും' : '🌾 Location-Smart Land & Culture Recommender'}
             </h1>
             <p style={{ margin: 0, fontSize: '0.9rem', opacity: 0.92, maxWidth: '760px', lineHeight: 1.4 }}>
-              Select your district to instantly discover the <strong>perfect agricultural cultures</strong> suited to your local soil, terrain, water, and budget.
+              {language === 'ml'
+                ? 'നിങ്ങളുടെ ജില്ലയും കൃഷിയിടത്തിന്റെ വിവരങ്ങളും നൽകി ഏറ്റവും അനുയോജ്യമായ വിളകളും ലാഭസാധ്യതകളും കണ്ടെത്തുക.'
+                : 'Select your district to instantly discover the perfect agricultural cultures suited to your local soil, terrain, water, and budget.'}
             </p>
           </div>
 
@@ -259,7 +261,7 @@ export default function SmartLandAnalyzer() {
                 transition: 'all 0.2s'
               }}
             >
-              🚀 Simple Mode (Fast)
+              {language === 'ml' ? '⚡ ലളിതമായ ഫോം' : '🚀 Simple Mode (Fast)'}
             </button>
             <button
               type="button"
@@ -276,7 +278,7 @@ export default function SmartLandAnalyzer() {
                 transition: 'all 0.2s'
               }}
             >
-              🔬 Advanced Soil-Test Mode
+              {language === 'ml' ? '🔬 വിശദമായ മണ്ണ് പരിശോധന' : '🔬 Advanced Soil-Test Mode'}
             </button>
           </div>
         </div>

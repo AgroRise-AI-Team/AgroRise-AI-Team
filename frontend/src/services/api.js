@@ -277,5 +277,27 @@ export const cropProfitEstimatorApi = {
   }
 };
 
+// Module: AI Agricultural News Analyzer API
+export const newsApi = {
+  async getLatestNews(params = {}) {
+    const query = new URLSearchParams();
+    if (params.category) query.append('category', params.category);
+    if (params.impact) query.append('impact', params.impact);
+    if (params.crop) query.append('crop', params.crop);
+    if (params.refresh) query.append('refresh', 'true');
+    const queryString = query.toString() ? `?${query.toString()}` : '';
+    return apiRequest(`/api/news/latest/${queryString}`, {
+      method: 'GET'
+    });
+  },
+
+  async refreshNews() {
+    return apiRequest('/api/news/refresh/', {
+      method: 'POST'
+    });
+  }
+};
+
+
 
 

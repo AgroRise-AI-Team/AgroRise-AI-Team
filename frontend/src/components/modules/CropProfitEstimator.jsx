@@ -6,7 +6,7 @@ import LeafletLocationPicker from '../common/LeafletLocationPicker';
 
 
 export default function CropProfitEstimator() {
-  const { user } = useAuth();
+  const { user, language, t } = useAuth();
 
   // Form State - Starts empty until user enters data
   const [selectedCrop, setSelectedCrop] = useState('');
@@ -227,11 +227,12 @@ export default function CropProfitEstimator() {
               <span>No Auto-Fill Defaults</span>
             </div>
             <h1 style={{ fontSize: '1.8rem', fontWeight: '800', margin: '0 0 6px 0', letterSpacing: '-0.5px' }}>
-              📊 Cultivation Cost, Yield & Profit / Loss Forecaster
+              {language === 'ml' ? '📊 വിള ഉൽപ്പാദനച്ചെലവും ലാഭ / നഷ്ട സാധ്യതയും' : '📊 Cultivation Cost, Yield & Profit / Loss Forecaster'}
             </h1>
             <p style={{ margin: 0, fontSize: '0.9rem', opacity: 0.92, maxWidth: '780px', lineHeight: 1.45 }}>
-              നിങ്ങളുടെ കൃഷിയിടത്തിന്റെ വിവരങ്ങളും ചെലവുകളും നൽകുക. കണക്കുകൂട്ടലുകൾ നൽകിയ ശേഷമേ ഫലങ്ങൾ കാണിക്കൂ.
-              (Enter your farm details and expenses. Projections will calculate only after you submit.)
+              {language === 'ml' 
+                ? 'നിങ്ങളുടെ കൃഷിയിടത്തിന്റെ വിവരങ്ങളും ചെലവുകളും നൽകുക. കണക്കുകൂട്ടലുകൾ നൽകിയ ശേഷമേ കൃത്യമായ ഫലങ്ങൾ ലഭ്യമാകൂ.'
+                : 'Enter your farm details and expenses. Projections will calculate only after you submit.'}
             </p>
           </div>
 

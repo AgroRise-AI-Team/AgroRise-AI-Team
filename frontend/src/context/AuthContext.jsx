@@ -1,12 +1,27 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
 import { authApi, setTokens, clearTokens } from '../services/api';
+import { TRANSLATIONS } from '../constants/translations';
 
 const AuthContext = createContext(null);
 
 export function AuthProvider({ children }) {
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
-  const [language, setLanguage] = useState('ml'); // Default Malayalam as requested
+  const [language, setLanguageState] = useState(() => {
+    return localStorage.getItem('agrorise_language') || 'ml';
+  });
+
+  const setLanguage = (newLang) => {
+    setLanguageState(newLang);
+    localStorage.setItem('agrorise_language', newLang);
+  };
+
+  const toggleLanguage = () => {
+    const nextLang = language === 'ml' ? 'en' : 'ml';
+    setLanguage(nextLang);
+  };
+
+  const t = TRANSLATIONS[language] || TRANSLATIONS.en;
 
   useEffect(() => {
     const initAuth = async () => {
@@ -98,14 +113,6 @@ export function AuthProvider({ children }) {
     return res;
   };
 
-  const toggleLanguage = () => {
-    const nextLang = language === 'ml' ? 'en' : 'ml';
-    setLanguage(nextLang);
-    if (user) {
-      updateProfile({ preferred_language: nextLang });
-    }
-  };
-
   return (
     <AuthContext.Provider
       value={{
@@ -115,6 +122,7 @@ export function AuthProvider({ children }) {
         language,
         setLanguage,
         toggleLanguage,
+        t,
         login,
         register,
         logout,

@@ -2,8 +2,10 @@ import React, { useState } from 'react';
 import LeftShowcase from './LeftShowcase';
 import LoginModal from './LoginModal';
 import RegisterModal from './RegisterModal';
+import { useAuth } from '../context/AuthContext';
 
 const EntryPage = () => {
+  const { language, setLanguage, t } = useAuth();
   const [loginOpen, setLoginOpen] = useState(false);
   const [registerOpen, setRegisterOpen] = useState(false);
 
@@ -16,6 +18,44 @@ const EntryPage = () => {
 
       {/* Right CTA panel */}
       <div className="entry-cta">
+        {/* Top Language Toggle Switch */}
+        <div style={{ display: 'flex', justifyContent: 'flex-end', marginBottom: '1.2rem' }}>
+          <div style={{ display: 'flex', background: '#eef8ef', padding: '3px', borderRadius: '10px', border: '1px solid #cce8d0' }}>
+            <button
+              onClick={() => setLanguage('ml')}
+              style={{
+                padding: '6px 12px',
+                borderRadius: '8px',
+                border: 'none',
+                background: language === 'ml' ? '#0b7a3e' : 'transparent',
+                color: language === 'ml' ? '#ffffff' : '#4b5563',
+                fontSize: '0.82rem',
+                fontWeight: 700,
+                cursor: 'pointer',
+                transition: 'all 0.2s'
+              }}
+            >
+              🇮🇳 മലയാളം
+            </button>
+            <button
+              onClick={() => setLanguage('en')}
+              style={{
+                padding: '6px 12px',
+                borderRadius: '8px',
+                border: 'none',
+                background: language === 'en' ? '#0b7a3e' : 'transparent',
+                color: language === 'en' ? '#ffffff' : '#4b5563',
+                fontSize: '0.82rem',
+                fontWeight: 700,
+                cursor: 'pointer',
+                transition: 'all 0.2s'
+              }}
+            >
+              🇬🇧 English
+            </button>
+          </div>
+        </div>
+
         {/* Logo mark */}
         <div style={{ marginBottom: '1.5rem' }}>
           <svg width="52" height="52" viewBox="0 0 52 52" fill="none">
@@ -26,17 +66,17 @@ const EntryPage = () => {
           </svg>
         </div>
 
-        <h1>AgroRise AI</h1>
-        <p>Your intelligent farming companion. Sign in to access your personalised agronomy dashboard.</p>
+        <h1>{t.appName}</h1>
+        <p>{t.entryDesc}</p>
 
         <button className="btn-login" onClick={() => setLoginOpen(true)}>
-          Sign In to Dashboard →
+          {t.signInCTA}
         </button>
 
         <p className="register-link">
-          New farmer?{' '}
+          {t.newFarmer}{' '}
           <button onClick={() => setRegisterOpen(true)}>
-            Register your account
+            {t.registerLink}
           </button>
         </p>
 
@@ -45,7 +85,7 @@ const EntryPage = () => {
           <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#9abfa2" strokeWidth="2" style={{ marginRight: 4, verticalAlign: 'middle' }}>
             <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
           </svg>
-          End‑to‑end encrypted · Kerala Agronomy Compliant
+          {t.encryptedNote}
         </div>
       </div>
 

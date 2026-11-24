@@ -3,7 +3,7 @@ import { useAuth } from '../context/AuthContext';
 import { SproutLogo } from './Icons';
 
 export default function Navbar({ activeTab = 'dashboard', onSelectTab }) {
-  const { user, logout, language, toggleLanguage } = useAuth();
+  const { user, logout, language, setLanguage, toggleLanguage, t } = useAuth();
   const profile = user?.profile || {};
   const isFarmer = profile.role === 'FARMER' || profile.role === 'BOTH';
 
@@ -21,13 +21,13 @@ export default function Navbar({ activeTab = 'dashboard', onSelectTab }) {
           </div>
           <div>
             <div className="nav-title-row">
-              <span className="nav-brand-title">AgroRise AI</span>
+              <span className="nav-brand-title">{t.appName}</span>
               <span className={`nav-badge-pill ${isFarmer ? 'farmer-pill' : 'visitor-pill'}`}>
-                {isFarmer ? 'Farmer Portal' : 'Visitor Portal'}
+                {isFarmer ? t.farmerPortal : t.visitorPortal}
               </span>
             </div>
             <span className="nav-brand-sub">
-              {isFarmer ? 'Farmer Account & Field Hub' : 'Kerala Agriculture Visitors Portal'}
+              {isFarmer ? t.farmerSub : t.visitorSub}
             </span>
           </div>
         </div>
@@ -40,7 +40,7 @@ export default function Navbar({ activeTab = 'dashboard', onSelectTab }) {
             onClick={() => onSelectTab && onSelectTab('dashboard')}
           >
             <span className="tab-icon">🌾</span>
-            <span>{isFarmer ? 'Agriculture Feed' : 'Visitors Dashboard'}</span>
+            <span>{isFarmer ? t.tabFeed : t.tabDashboard}</span>
           </button>
 
           <button
@@ -49,7 +49,7 @@ export default function Navbar({ activeTab = 'dashboard', onSelectTab }) {
             onClick={() => onSelectTab && onSelectTab('land_analyzer')}
           >
             <span className="tab-icon">🗺️</span>
-            <span>Smart Land Analyzer</span>
+            <span>{t.tabLandAnalyzer}</span>
           </button>
 
           <button
@@ -58,7 +58,7 @@ export default function Navbar({ activeTab = 'dashboard', onSelectTab }) {
             onClick={() => onSelectTab && onSelectTab('profit_estimator')}
           >
             <span className="tab-icon">💰</span>
-            <span>Profit Estimator</span>
+            <span>{t.tabProfitEstimator}</span>
           </button>
 
 
@@ -68,20 +68,59 @@ export default function Navbar({ activeTab = 'dashboard', onSelectTab }) {
             onClick={() => onSelectTab && onSelectTab('profile')}
           >
             <span className="tab-icon">{isFarmer ? '👤' : '⚙️'}</span>
-            <span>{isFarmer ? 'Farmer Profile' : 'Account Settings'}</span>
+            <span>{isFarmer ? t.tabProfile : t.tabSettings}</span>
           </button>
         </nav>
 
         {/* Right: User Identity & Controls */}
         <div className="nav-actions">
-          {/* Language Toggle */}
-          <button 
-            className="lang-toggle-btn" 
-            onClick={toggleLanguage}
-            title="Switch Language / ഭാഷ മാറ്റുക"
-          >
-            🌐 {language === 'ml' ? 'English' : 'മലയാളം'}
-          </button>
+          {/* Dual Language Switcher Pill */}
+          <div style={{ display: 'flex', background: 'rgba(0,0,0,0.06)', borderRadius: '10px', padding: '3px' }}>
+            <button 
+              type="button"
+              style={{
+                padding: '5px 10px',
+                borderRadius: '8px',
+                border: 'none',
+                background: language === 'ml' ? '#047857' : 'transparent',
+                color: language === 'ml' ? '#ffffff' : '#374151',
+                fontWeight: 700,
+                fontSize: '0.8rem',
+                cursor: 'pointer',
+                transition: 'all 0.2s'
+              }}
+              onClick={(e) => {
+                e.preventDefault();
+                e.stopPropagation();
+                setLanguage('ml');
+              }}
+              title="മലയാളത്തിലേക്ക് മാറ്റുക"
+            >
+              🇮🇳 മലയാളം
+            </button>
+            <button 
+              type="button"
+              style={{
+                padding: '5px 10px',
+                borderRadius: '8px',
+                border: 'none',
+                background: language === 'en' ? '#047857' : 'transparent',
+                color: language === 'en' ? '#ffffff' : '#374151',
+                fontWeight: 700,
+                fontSize: '0.8rem',
+                cursor: 'pointer',
+                transition: 'all 0.2s'
+              }}
+              onClick={(e) => {
+                e.preventDefault();
+                e.stopPropagation();
+                setLanguage('en');
+              }}
+              title="Switch to English"
+            >
+              🇬🇧 English
+            </button>
+          </div>
 
           {/* User Profile Pill */}
           <div 
@@ -105,8 +144,8 @@ export default function Navbar({ activeTab = 'dashboard', onSelectTab }) {
           </div>
 
           {/* Logout */}
-          <button className="logout-btn" onClick={logout} title="Sign Out">
-            <span>Log out</span>
+          <button className="logout-btn" onClick={logout} title={t.logout}>
+            <span>{t.logout}</span>
           </button>
         </div>
       </div>

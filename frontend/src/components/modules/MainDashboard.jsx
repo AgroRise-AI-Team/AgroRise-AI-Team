@@ -2,9 +2,10 @@ import React, { useState, useEffect } from 'react';
 import { agricultureApi } from '../../services/api';
 import { KERALA_DISTRICTS } from '../../constants/enums';
 import { useAuth } from '../../context/AuthContext';
+import AgriNewsSection from './AgriNewsSection';
 
 export default function MainDashboard() {
-  const { user } = useAuth();
+  const { user, t } = useAuth();
   const [farmers, setFarmers] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -63,15 +64,15 @@ export default function MainDashboard() {
       <section className="dashboard-hero-section">
         <div className="hero-text-block">
           <div className="hero-pill-badge">
-            <span className="live-dot"></span> Visitors Access Portal • Kerala Krishi Network
+            <span className="live-dot"></span> {t.visitorsPortalTag}
           </div>
-          <h1 className="hero-heading">🌾 Visitors Dashboard</h1>
+          <h1 className="hero-heading">{t.visitorsHeading}</h1>
           <p className="hero-subtext">
-            Explore verified agricultural records, land cultivation profiles, soil reports, and field photographs uploaded directly by farmers across Kerala.
+            {t.visitorsSubtext}
           </p>
           {user && (
             <div style={{ display: 'inline-flex', alignItems: 'center', gap: '8px', background: 'rgba(255,255,255,0.18)', padding: '6px 14px', borderRadius: '10px', fontSize: '0.84rem', marginTop: '6px' }}>
-              <span>👋 Logged in as:</span>
+              <span>👋 {t.loggedInAs}</span>
               <strong style={{ color: '#ffffff' }}>{user.username}</strong>
               <span style={{ opacity: 0.85 }}>({user.profile?.role || 'VISITOR'} • {user.profile?.district || 'Kerala'})</span>
             </div>
@@ -84,7 +85,7 @@ export default function MainDashboard() {
             <span className="stat-icon">👨‍🌾</span>
             <div className="stat-content">
               <span className="stat-num">{totalFarmers}</span>
-              <span className="stat-lbl">Registered Farmers</span>
+              <span className="stat-lbl">{t.statFarmers}</span>
             </div>
           </div>
 
@@ -92,7 +93,7 @@ export default function MainDashboard() {
             <span className="stat-icon">🌾</span>
             <div className="stat-content">
               <span className="stat-num">{totalAcres}</span>
-              <span className="stat-lbl">Total Acres Farmed</span>
+              <span className="stat-lbl">{t.statAcres}</span>
             </div>
           </div>
 
@@ -100,7 +101,7 @@ export default function MainDashboard() {
             <span className="stat-icon">📸</span>
             <div className="stat-content">
               <span className="stat-num">{farmersWithImages}</span>
-              <span className="stat-lbl">Field Photos Uploaded</span>
+              <span className="stat-lbl">{t.statPhotos}</span>
             </div>
           </div>
 
@@ -108,11 +109,14 @@ export default function MainDashboard() {
             <span className="stat-icon">🌱</span>
             <div className="stat-content">
               <span className="stat-num">{uniqueCrops.length || 1}</span>
-              <span className="stat-lbl">Active Crop Types</span>
+              <span className="stat-lbl">{t.statCrops}</span>
             </div>
           </div>
         </div>
       </section>
+
+      {/* AI Agricultural News & Farmer Advisories Feed */}
+      <AgriNewsSection />
 
       {/* Filter and Control Bar */}
       <section className="filter-controls-bar">
@@ -122,7 +126,7 @@ export default function MainDashboard() {
             <span className="search-icon">🔍</span>
             <input
               type="text"
-              placeholder="Search farmer, crop, or district..."
+              placeholder={t.searchFarmerPlaceholder}
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
               className="dashboard-search-input"
@@ -139,7 +143,7 @@ export default function MainDashboard() {
               onChange={(e) => setSelectedDistrict(e.target.value)}
               className="dashboard-filter-select"
             >
-              <option value="">All Kerala Districts</option>
+              <option value="">{t.allDistricts}</option>
               {KERALA_DISTRICTS.map(d => (
                 <option key={d} value={d}>{d}</option>
               ))}
@@ -154,11 +158,11 @@ export default function MainDashboard() {
               checked={onlyWithImages}
               onChange={(e) => setOnlyWithImages(e.target.checked)}
             />
-            <span>With Field Photos Only</span>
+            <span>{t.onlyWithPhotos}</span>
           </label>
 
           <button className="refresh-data-btn" onClick={fetchAgricultureData} title="Refresh farm records">
-            🔄 Refresh
+            🔄 {t.refreshBtn || 'Refresh'}
           </button>
         </div>
       </section>
@@ -305,7 +309,7 @@ export default function MainDashboard() {
                   Updated: {new Date(farmer.updated_at).toLocaleDateString('en-IN', { day: 'numeric', month: 'short', year: 'numeric' })}
                 </span>
                 <span className="status-indicator">
-                  <span className="dot-green"></span> Active Record
+                  <span className="dot-green"></span> {t.activeRecord}
                 </span>
               </div>
             </div>

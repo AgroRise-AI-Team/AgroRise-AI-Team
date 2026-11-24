@@ -1,7 +1,9 @@
 import React, { useState } from 'react';
 import { SproutLogo, SearchIcon, SatelliteIcon } from './Icons';
+import { useAuth } from '../context/AuthContext';
 
 export default function LeftShowcase() {
+  const { t } = useAuth();
   const [activePin, setActivePin] = useState(null);
 
   const telemetryPins = [
@@ -18,22 +20,20 @@ export default function LeftShowcase() {
           <SproutLogo size={32} />
         </div>
         <div className="brand-text">
-          <h2 className="brand-title">AgroRise AI</h2>
-          <span className="brand-subtitle">Precision Agronomy Intelligence</span>
+          <h2 className="brand-title">{t.appName}</h2>
+          <span className="brand-subtitle">{t.subHeadline}</span>
         </div>
       </div>
 
       {/* Hero Headings */}
       <div className="hero-text-block">
         <h1 className="hero-heading">
-          <span className="heading-dark">Grow Smarter.</span>
+          <span className="heading-dark">{t.entryHeadline1}</span>
           <br />
-          <span className="heading-green">Farm Better.</span>
+          <span className="heading-green">{t.entryHeadline2}</span>
         </h1>
         <p className="hero-description">
-          Your intelligent farming companion. Harness real-time telemetry,
-          soil moisture robotics, and autonomous yield forecasting in one
-          synchronized hub.
+          {t.entryDesc}
         </p>
       </div>
 
@@ -42,10 +42,10 @@ export default function LeftShowcase() {
         {/* Mockup Top Navigation Bar */}
         <div className="mockup-header">
           <div className="mockup-header-left">
-            <span className="mockup-title">AgroRise AI</span>
+            <span className="mockup-title">{t.appName}</span>
             <div className="telemetry-status-pill">
               <span className="pulsing-dot"></span>
-              <span className="telemetry-count">1,420 Telemetry Nodes Active</span>
+              <span className="telemetry-count">{t.telemetryNodes}</span>
             </div>
           </div>
           <div className="mockup-search">

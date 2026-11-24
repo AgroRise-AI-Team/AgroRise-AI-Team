@@ -26,6 +26,11 @@ from .profit_estimator_views import (
     CropProfitMetadataView,
 )
 
+from .news_views import (
+    AgriNewsListView,
+    AgriNewsRefreshView,
+)
+
 urlpatterns = [
     # Auth endpoints
     path('register/', RegisterView.as_view(), name='register_alt'),
@@ -71,6 +76,10 @@ urlpatterns = [
     path('auth/otp/verify/', VerifyOTPView.as_view(), name='verify_otp'),
     path('otp/send/', SendOTPView.as_view(), name='send_otp_alt'),
     path('otp/verify/', VerifyOTPView.as_view(), name='verify_otp_alt'),
+
+    # AI Agricultural News Analyzer Endpoints
+    path('news/latest/', AgriNewsListView.as_view(), name='agri_news_latest'),
+    path('news/refresh/', AgriNewsRefreshView.as_view(), name='agri_news_refresh'),
 ]
 
 

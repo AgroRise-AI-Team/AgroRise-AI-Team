@@ -16,21 +16,21 @@ function MainApp() {
   const role = user?.profile?.role || user?.role;
   const isFarmer = role === 'FARMER' || role === 'BOTH';
 
-  // If farmer = true, default is profile; if farmer = false (VISITOR / BUYER), default is Visitors Dashboard ('dashboard')
-  const [activeTab, setActiveTab] = useState(isFarmer ? 'profile' : 'dashboard');
+  // Active tab state
+  const [activeTab, setActiveTab] = useState('dashboard');
+  const [hasInitializedTab, setHasInitializedTab] = useState(false);
 
-  // Automatically ensure that when a visitor logs in, they land on the Visitors Dashboard
+  // Set initial default tab only ONCE upon initial login
   useEffect(() => {
-    if (user) {
+    if (user?.id && !hasInitializedTab) {
       const currentRole = user?.profile?.role || user?.role;
       const farmerStatus = currentRole === 'FARMER' || currentRole === 'BOTH';
-      if (!farmerStatus) {
-        setActiveTab('dashboard');
-      } else {
-        setActiveTab('profile');
-      }
+      setActiveTab(farmerStatus ? 'profile' : 'dashboard');
+      setHasInitializedTab(true);
+    } else if (!user?.id) {
+      setHasInitializedTab(false);
     }
-  }, [user]);
+  }, [user?.id, hasInitializedTab]);
 
   if (loading) {
     return (
