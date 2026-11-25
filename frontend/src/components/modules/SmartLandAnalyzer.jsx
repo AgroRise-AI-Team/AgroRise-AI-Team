@@ -237,7 +237,7 @@ export default function SmartLandAnalyzer() {
   const topCrop = activeAnalysis?.ranked_crops?.[0];
 
   return (
-    <div className="smart-land-analyzer-container" style={{ padding: '20px 24px', maxWidth: '1380px', margin: '0 auto', fontFamily: 'inherit' }}>
+    <div className="smart-land-analyzer-container">
       
       {/* ========================================================= */}
       {/* 1. Header Banner & Quick Presets */}

@@ -5,7 +5,7 @@ import { SproutLogo } from './Icons';
 export default function Navbar({ activeTab = 'dashboard', onSelectTab }) {
   const { user, logout, language, setLanguage, toggleLanguage, t } = useAuth();
   const profile = user?.profile || {};
-  const isFarmer = profile.role === 'FARMER' || profile.role === 'BOTH';
+  const isFarmer = profile.role === 'FARMER';
 
   return (
     <header className="dashboard-navbar">
@@ -23,11 +23,11 @@ export default function Navbar({ activeTab = 'dashboard', onSelectTab }) {
             <div className="nav-title-row">
               <span className="nav-brand-title">{t.appName}</span>
               <span className={`nav-badge-pill ${isFarmer ? 'farmer-pill' : 'visitor-pill'}`}>
-                {isFarmer ? t.farmerPortal : t.visitorPortal}
+                {isFarmer ? t.farmerPortal : (t.userPortal || 'User Portal')}
               </span>
             </div>
             <span className="nav-brand-sub">
-              {isFarmer ? t.farmerSub : t.visitorSub}
+              {isFarmer ? t.farmerSub : (t.userSub || 'Kerala Agriculture User Portal')}
             </span>
           </div>
         </div>
@@ -145,20 +145,20 @@ export default function Navbar({ activeTab = 'dashboard', onSelectTab }) {
           {/* User Profile Pill */}
           <div 
             className="user-profile-badge active"
-            title={isFarmer ? "Logged in Farmer" : "Logged in Visitor"}
+            title={isFarmer ? "Logged in Farmer" : "Logged in User"}
             onClick={() => onSelectTab && onSelectTab('profile')}
             style={{ cursor: 'pointer' }}
           >
             <div className="user-avatar-circle">
-              {user?.username ? user.username.charAt(0).toUpperCase() : (isFarmer ? 'F' : 'V')}
+              {user?.username ? user.username.charAt(0).toUpperCase() : (isFarmer ? 'F' : 'U')}
             </div>
             <div className="user-details-mini">
               <span className="user-name">
-                {user?.username || (isFarmer ? 'Farmer' : 'Visitor')} 
+                {user?.username || (isFarmer ? 'Farmer' : 'User')} 
                 {profile.is_verified_farmer && <span className="verified-check" title="Verified Kerala Farmer">✓</span>}
               </span>
               <span className="user-location">
-                {profile.role || 'VISITOR'} • {profile.district || 'Kerala'}
+                {isFarmer ? 'FARMER' : 'NORMAL USER'} • {profile.district || 'Kerala'}
               </span>
             </div>
           </div>

@@ -5,8 +5,10 @@
 
 .leaf-scanner-container {
   padding: 24px;
-  max-width: 1280px;
+  max-width: 1360px;
+  width: 100%;
   margin: 0 auto;
+  box-sizing: border-box;
   font-family: inherit;
 }
 
@@ -485,5 +487,25 @@
   }
   .treatments-grid {
     grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 640px) {
+  .leaf-scanner-container {
+    padding: 14px 10px;
+  }
+  .leaf-scanner-header {
+    padding: 18px 16px;
+    border-radius: 16px;
+  }
+  .header-title {
+    font-size: 1.4rem;
+  }
+  .upload-panel-card {
+    padding: 16px 14px;
+    border-radius: 16px;
+  }
+  .dropzone-box {
+    padding: 20px 14px;
   }
 }

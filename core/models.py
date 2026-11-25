@@ -17,10 +17,7 @@ class UserProfile(models.Model):
 
     class Role(models.TextChoices):
         FARMER = 'FARMER', 'Farmer'
-        VISITOR = 'VISITOR', 'Visitor'
-        BUYER = 'BUYER', 'Buyer'
-        BOTH = 'BOTH', 'Farmer & Buyer'
-        EXPERT = 'EXPERT', 'Agricultural Officer / Expert'
+        USER = 'USER', 'Normal User'
 
     class Language(models.TextChoices):
         MALAYALAM = 'ml', 'Malayalam (മലയാളം)'
@@ -179,4 +176,60 @@ class PurchaseOrder(models.Model):
 
     def __str__(self):
         return f"Order #{self.id} for {self.product.crop_name} ({self.requested_quantity_kg} kg)"
+
+
+class FarmerEnquiry(models.Model):
+    """
+    Enquiries and agricultural doubts sent by normal users/visitors to farmers
+    """
+    farmer = models.ForeignKey(User, on_delete=models.CASCADE, related_name='received_enquiries')
+    sender = models.ForeignKey(User, on_delete=models.SET_NULL, null=True, blank=True, related_name='sent_enquiries')
+    sender_name = models.CharField(max_length=150)
+    sender_email = models.EmailField(blank=True)
+    sender_phone = models.CharField(max_length=20, blank=True)
+    subject = models.CharField(max_length=200)
+    message = models.TextField()
+    reply = models.TextField(blank=True)
+    status = models.CharField(max_length=20, default='PENDING')  # 'PENDING', 'ANSWERED'
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
+    class Meta:
+        ordering = ['-created_at']
+
+    def __str__(self):
+        return f"Enquiry to {self.farmer.username} from {self.sender_name}: {self.subject}"
+
+
+class AgriculturalNewsItem(models.Model):
+    """
+    Live agricultural news, advisories, and market intelligence auto-updated every 24 hours.
+    """
+    title = models.CharField(max_length=500)
+    title_ml = models.CharField(max_length=500, blank=True)
+    source = models.CharField(max_length=200, default='Agri News')
+    link = models.URLField(max_length=1000, blank=True, default='#')
+    published_at = models.CharField(max_length=100, blank=True)
+    category = models.CharField(max_length=100, default='General Agriculture')
+    category_ml = models.CharField(max_length=100, blank=True)
+    impact_level = models.CharField(max_length=20, default='MEDIUM')  # HIGH, MEDIUM, LOW
+    impact_level_ml = models.CharField(max_length=50, blank=True)
+    sentiment = models.CharField(max_length=20, default='NEUTRAL')  # POSITIVE, CAUTION, NEUTRAL
+    affected_crops = models.JSONField(default=list, blank=True)
+    affected_crops_ml = models.JSONField(default=list, blank=True)
+    farmer_summary = models.TextField(blank=True)
+    farmer_summary_ml = models.TextField(blank=True)
+    action_advice = models.TextField(blank=True)
+    action_advice_ml = models.TextField(blank=True)
+    is_live = models.BooleanField(default=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
+    class Meta:
+        ordering = ['-updated_at', '-created_at']
+
+    def __str__(self):
+        return f"[{self.category}] {self.title[:60]}"
+
+
 

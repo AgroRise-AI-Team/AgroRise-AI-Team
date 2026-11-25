@@ -19,8 +19,16 @@ KNOWLEDGE_DOCUMENTS = [
     {
         "id": "kau-coconut-pest-01",
         "title": "Coconut: Rhinoceros Beetle & Red Palm Weevil Management (KAU POP)",
+        "title_ml": "തെങ്ങ്: കൊമ്പൻ ചെല്ലി, ചെമ്പൻ ചെല്ലി കീട നിയന്ത്രണം (KAU POP)",
         "source": "KAU Package of Practices: Plantation Crops",
         "keywords": ["coconut", "rhinoceros beetle", "red palm weevil", "oructes", "rhynchophorus", "വണ്ട്", "ചെല്ലി", "കൊമ്പൻ ചെല്ലി", "ചെമ്പൻ ചെല്ലി", "തെങ്ങ്"],
+        "content_ml": """തെങ്ങിലെ പ്രധാന കീടങ്ങളും നിയന്ത്രണവും (KAU പാക്കേജ്):
+1. കൊമ്പൻ ചെല്ലി (Rhinoceros beetle):
+   - ലക്ഷണങ്ങൾ: മണ്ടയിലെ കൂമ്പോലകൾ വിടരുമ്പോൾ 'V' ആകൃതിയിൽ കത്രിക കൊണ്ട് മുറിച്ചതുപോലെ കാണപ്പെടുക.
+   - നിയന്ത്രണം: മണ്ട വൃത്തിയാക്കി 250 ഗ്രാം വേപ്പിൻപിണ്ണാക്കും തുല്യ അളവ് മണലും ചേർത്ത് ഏറ്റവും ഉള്ളിലെ 3-4 ഓലക്കവിളുകളിൽ വർഷത്തിൽ രണ്ടുതവണ (മേയ്, ഒക്ടോബർ) നിറയ്ക്കുക. അല്ലെങ്കിൽ നാഫ്തലിൻ ഗുളികകൾ (3 എണ്ണം) മണൽ ചേർത്ത് ഇടുക.
+2. ചെമ്പൻ ചെല്ലി (Red palm weevil):
+   - ലക്ഷണങ്ങൾ: തടിയിൽ ചെറിയ സുഷിരങ്ങളും അവയിലൂടെ കൊഴുത്ത തവിട്ടുനിറത്തിലുള്ള ദ്രാവകം ഒലിച്ചിറങ്ങുന്നതും കാണാം. മണ്ട ചരിഞ്ഞു വീഴുക.
+   - നിയന്ത്രണം: ഫെറോമോൺ കെണി (ഫെറോലൂർ പ്ലസ്) വെക്കുക. ആക്രമണമുള്ള ഭാഗത്ത് ക്ലോർപൈറിഫോസ് 20 EC (1 ലിറ്റർ വെള്ളത്തിൽ 10 മില്ലി) സുഷിരത്തിലൂടെ ഒഴിച്ച് സിമന്റോ കളിമണ്ണോ വെച്ച് അടയ്ക്കുക.""",
         "content": """Coconut Pest Management (Kerala Agricultural University):
 1. Rhinoceros Beetle (Oryctes rhinoceros / കൊമ്പൻ ചെല്ലി):
    - Symptoms: Characteristic geometric 'V'-shaped cut on fan-opened leaves; bore holes on crown.
@@ -104,8 +112,19 @@ KNOWLEDGE_DOCUMENTS = [
     {
         "id": "kau-pepper-pop-06",
         "title": "Black Pepper: Quick Wilt & Slow Decline Management",
+        "title_ml": "കുരുമുളക്: ദ്രുതവാട്ടം, മന്ദവാട്ടം, പൊള്ളുവണ്ട് നിയന്ത്രണം",
         "source": "ICAR - Indian Institute of Spices Research (IISR), Kozhikode",
         "keywords": ["black pepper", "quick wilt", "foot rot", "phytophthora", "trichoderma", "panniyur", "കുരുമുളക്", "ദ്രുതവാട്ടം", "പന്നിയൂർ", "ഐ.ഐ.എസ്.ആർ"],
+        "content_ml": """കുരുമുളക് കൃഷിയും ദ്രുതവാട്ട നിയന്ത്രണവും (IISR & KAU ശുപാർശകൾ):
+1. ദ്രുതവാട്ടം (Phytophthora capsici):
+   - ലക്ഷണങ്ങൾ: തണ്ടിന്റെ ചുവട്ടിലും ഇലകളിലും കറുത്ത പാടുകൾ, ഇല കൊഴിയൽ, വേരുകൾ ചീഞ്ഞ് ചെടി പെട്ടെന്ന് ഉണങ്ങിപ്പോകുന്നു.
+   - നിയന്ത്രണം:
+     * കാലവർഷത്തിന് മുൻപ് (മേയ്-ജൂൺ): 1% ബോർഡോ മിശ്രിതം അല്ലെങ്കിൽ 0.2% കോപ്പർ ഓക്സിക്ലോറൈഡ് തടത്തിൽ ഒഴിച്ചു കൊടുക്കുക (ഒരു കൊടിക്ക് 3-5 ലിറ്റർ).
+     * ജൈവ നിയന്ത്രണം: 50 ഗ്രാം ട്രൈക്കോഡെർമ 5 കിലോ ഉണങ്ങിയ ചാണകപ്പൊടിയോ വേപ്പിൻ പിണ്ണാക്കോ ചേർത്ത് ജൂൺ മാസത്തിൽ തടത്തിലിടുക.
+     * കാലവർഷത്തിന് ശേഷം (ഓഗസ്റ്റ്-സെപ്റ്റംബർ): പൊട്ടാസ്യം ഫോസ്ഫണേറ്റ് (അക്കോമിൻ) 3 മില്ലി ഒരു ലിറ്റർ വെള്ളത്തിൽ കലക്കി തളിക്കുക.
+2. പൊള്ളുവണ്ട് (Pollu Beetle):
+   - തിരികളിൽ കായ് തുരന്ന് ഉൾഭാഗം പൊള്ളയാക്കുന്നു.
+   - 2% വേപ്പെണ്ണ വെളുത്തുള്ളി മിശ്രിതം അല്ലെങ്കിൽ ക്വിനാൽഫോസ് 0.05% ജൂൺ-ജൂലൈ, സെപ്റ്റംബർ-ഒക്ടോബർ മാസങ്ങളിൽ തളിക്കുക.""",
         "content": """Black Pepper (Piper nigrum) Agronomy & Disease Management:
 1. Varieties: Panniyur-1 (high yield hybrid), Panniyur-5 (tolerant to shade), IISR Thevam, IISR Shakthi.
 2. Quick Wilt / Foot Rot (Phytophthora capsici / ദ്രുതവാട്ടം):
@@ -248,8 +267,12 @@ class AgriculturalRAGRetriever:
 
         results = []
         for rank, idx in enumerate(top_indices):
+            score = float(boosted_scores[idx])
+            # Only include documents that have genuine agronomic relevance
+            if score < 0.06:
+                continue
             doc = dict(self.docs[idx])
-            doc["score"] = float(boosted_scores[idx])
+            doc["score"] = score
             doc["rank"] = rank + 1
             results.append(doc)
 
@@ -270,13 +293,14 @@ def get_rag_context_and_sources(query: str, top_k: int = 2):
     sources = []
 
     for doc in retrieved_docs:
+        content_text = doc.get("content_ml") or doc.get("content")
         context_parts.append(
             f"--- VERIFIED REFERENCE [{doc['id']}]: {doc['title']} ---\n"
             f"Source Authority: {doc['source']}\n"
-            f"{doc['content']}\n"
+            f"{content_text}\n"
         )
         if doc['source'] not in sources:
             sources.append(doc['source'])
 
-    combined_context = "\n".join(context_parts)
+    combined_context = "\n".join(context_parts) if context_parts else "No specific document matched this query."
     return combined_context, sources, retrieved_docs

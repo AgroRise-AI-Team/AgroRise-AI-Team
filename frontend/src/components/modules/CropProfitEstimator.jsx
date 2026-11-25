@@ -198,7 +198,7 @@ export default function CropProfitEstimator() {
   const activeCropMeta = cropsList.find(c => c.id === selectedCrop);
 
   return (
-    <div className="crop-profit-estimator-container" style={{ padding: '20px 24px', maxWidth: '1380px', margin: '0 auto' }}>
+    <div className="crop-profit-estimator-container">
       
       {/* 1. Header Hero */}
       <div style={{

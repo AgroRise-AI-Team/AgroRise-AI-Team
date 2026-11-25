@@ -10,7 +10,7 @@ from rest_framework.response import Response
 from rest_framework.views import APIView
 from rest_framework_simplejwt.tokens import RefreshToken
 
-from .models import UserProfile, ProductListing, PurchaseOrder
+from .models import UserProfile, ProductListing, PurchaseOrder, FarmerEnquiry
 from .serializers import (
     ChangePasswordSerializer,
     CustomTokenObtainPairSerializer,
@@ -46,7 +46,16 @@ class RegisterView(APIView):
 
     def post(self, request):
         serializer = RegisterSerializer(data=request.data)
-        serializer.is_valid(raise_exception=True)
+        if not serializer.is_valid():
+            errors = serializer.errors
+            if 'email' in errors:
+                msg = errors['email'][0] if isinstance(errors['email'], list) else str(errors['email'])
+                return Response(
+                    {"email": [msg], "message": msg, "error": msg},
+                    status=status.HTTP_400_BAD_REQUEST
+                )
+            return Response(errors, status=status.HTTP_400_BAD_REQUEST)
+
         user = serializer.save()
         refresh = RefreshToken.for_user(user)
         return Response({
@@ -166,7 +175,7 @@ class FarmerAgricultureDataView(APIView):
 
         # Fetch profiles that belong strictly to registered farmers
         queryset = UserProfile.objects.select_related('user').filter(
-            role__in=[UserProfile.Role.FARMER, UserProfile.Role.BOTH]
+            role=UserProfile.Role.FARMER
         ).order_by('-updated_at')
 
         if district:
@@ -210,6 +219,8 @@ class FarmerAgricultureDataView(APIView):
                 "irrigation_method": profile.irrigation_method,
                 "irrigation_method_display": profile.get_irrigation_method_display(),
                 "land_image_url": land_image_url,
+                "phone_number": profile.phone_number or "",
+                "email": profile.user.email or "",
                 "is_verified_farmer": profile.is_verified_farmer,
                 "products": products,
                 "updated_at": profile.updated_at,
@@ -301,6 +312,15 @@ class SendOTPView(APIView):
         if not email and not phone_number:
             return Response(
                 {"error": "Please provide an email address or mobile phone number."},
+                status=status.HTTP_400_BAD_REQUEST
+            )
+
+        if email and User.objects.filter(email__iexact=email).exists():
+            return Response(
+                {
+                    "error": "This email is already registered. Please use another email or log in.",
+                    "message": "This email is already registered. Please use another email or log in."
+                },
                 status=status.HTTP_400_BAD_REQUEST
             )
 
@@ -772,4 +792,186 @@ class MarketplaceOrderView(APIView):
             "crop_name": product.crop_name,
             "status": order.status
         }, status=status.HTTP_201_CREATED)
+
+
+class FarmerEnquiryView(APIView):
+    """
+    Enquiries and doubts API:
+    - GET: Returns received doubts for Farmers, or sent doubts for Normal Users
+    - POST: Normal users/visitors submit an enquiry/doubt to a specific farmer
+    """
+    permission_classes = (AllowAny,)
+
+    def get(self, request):
+        if not request.user.is_authenticated:
+            return Response({"enquiries": []}, status=status.HTTP_200_OK)
+
+        user = request.user
+        profile = getattr(user, 'profile', None)
+        is_farmer = profile and profile.role == UserProfile.Role.FARMER
+
+        if is_farmer:
+            enquiries = FarmerEnquiry.objects.filter(farmer=user)
+        else:
+            enquiries = FarmerEnquiry.objects.filter(sender=user)
+
+        data = []
+        for eq in enquiries:
+            farmer_profile = getattr(eq.farmer, 'profile', None)
+            data.append({
+                "id": eq.id,
+                "farmer_id": eq.farmer.id,
+                "farmer_username": eq.farmer.username,
+                "farmer_name": f"{eq.farmer.first_name} {eq.farmer.last_name}".strip() or eq.farmer.username,
+                "farmer_district": getattr(farmer_profile, 'district', '') if farmer_profile else '',
+                "farmer_phone": getattr(farmer_profile, 'phone_number', '') if farmer_profile else '',
+                "farmer_crop": getattr(farmer_profile, 'current_crop', '') if farmer_profile else '',
+                "sender_name": eq.sender_name,
+                "sender_email": eq.sender_email,
+                "sender_phone": eq.sender_phone,
+                "subject": eq.subject,
+                "message": eq.message,
+                "reply": eq.reply,
+                "status": eq.status,
+                "created_at": eq.created_at.isoformat(),
+            })
+
+        return Response({
+            "is_farmer": is_farmer,
+            "total": len(data),
+            "enquiries": data
+        }, status=status.HTTP_200_OK)
+
+    def post(self, request):
+        farmer_id = request.data.get('farmer_id')
+        if not farmer_id:
+            return Response({"detail": "farmer_id is required"}, status=status.HTTP_400_BAD_REQUEST)
+
+        try:
+            farmer = User.objects.get(id=farmer_id)
+        except User.DoesNotExist:
+            return Response({"detail": "Target farmer not found"}, status=status.HTTP_404_NOT_FOUND)
+
+        sender = request.user if request.user.is_authenticated else None
+        sender_name = request.data.get('sender_name', '').strip()
+        if not sender_name and sender:
+            sender_name = f"{sender.first_name} {sender.last_name}".strip() or sender.username
+        if not sender_name:
+            sender_name = "Interested Farmer/Visitor"
+
+        sender_email = request.data.get('sender_email', '').strip()
+        if not sender_email and sender:
+            sender_email = sender.email
+
+        sender_phone = request.data.get('sender_phone', '').strip()
+        if not sender_phone and sender and hasattr(sender, 'profile'):
+            sender_phone = sender.profile.phone_number
+
+        subject = request.data.get('subject', '').strip() or 'Agricultural Doubt / Enquiry'
+        message = request.data.get('message', '').strip()
+        if not message:
+            return Response({"detail": "Enquiry message / question cannot be empty"}, status=status.HTTP_400_BAD_REQUEST)
+
+        enquiry = FarmerEnquiry.objects.create(
+            farmer=farmer,
+            sender=sender,
+            sender_name=sender_name,
+            sender_email=sender_email,
+            sender_phone=sender_phone,
+            subject=subject,
+            message=message,
+            status='PENDING'
+        )
+
+        # Notify the farmer via email if email is present
+        try:
+            if farmer.email:
+                email_subj = f"🌾 [AgroRise AI] New Farming Enquiry from {sender_name}: {subject}"
+                email_body = f"""Dear {farmer.username},
+
+You have received a new farming doubt/enquiry on AgroRise AI:
+
+From: {sender_name}
+Email: {sender_email or 'Not provided'}
+Phone: {sender_phone or 'Not provided'}
+Subject: {subject}
+
+Question / Doubt Details:
+--------------------------------------------------
+{message}
+--------------------------------------------------
+
+You can view and reply to this directly from your AgroRise Farmer Dashboard under 'Enquiries'.
+
+Warm regards,
+AgroRise AI Team
+"""
+                send_mail(
+                    email_subj,
+                    email_body,
+                    settings.DEFAULT_FROM_EMAIL or 'noreply@agrorise.com',
+                    [farmer.email],
+                    fail_silently=True
+                )
+        except Exception:
+            pass
+
+        return Response({
+            "status": "success",
+            "message": "Enquiry submitted successfully. The farmer has been notified.",
+            "enquiry_id": enquiry.id
+        }, status=status.HTTP_201_CREATED)
+
+
+class FarmerEnquiryReplyView(APIView):
+    """
+    Farmer responds to an enquiry/doubt
+    """
+    permission_classes = (AllowAny,)
+
+    def post(self, request, pk):
+        try:
+            enquiry = FarmerEnquiry.objects.get(pk=pk)
+        except FarmerEnquiry.DoesNotExist:
+            return Response({"detail": "Enquiry not found"}, status=status.HTTP_404_NOT_FOUND)
+
+        reply = request.data.get('reply', '').strip()
+        if not reply:
+            return Response({"detail": "Reply text cannot be empty"}, status=status.HTTP_400_BAD_REQUEST)
+
+        enquiry.reply = reply
+        enquiry.status = 'ANSWERED'
+        enquiry.save()
+
+        # Send email response to user if email was given
+        try:
+            if enquiry.sender_email:
+                send_mail(
+                    f"🌾 [AgroRise AI] Farmer {enquiry.farmer.username} replied to your enquiry",
+                    f"""Hello {enquiry.sender_name},
+
+Farmer {enquiry.farmer.username} has replied to your enquiry: "{enquiry.subject}"
+
+Farmer's Response:
+--------------------------------------------------
+{reply}
+--------------------------------------------------
+
+Thank you for consulting Kerala farmers on AgroRise AI.
+""",
+                    settings.DEFAULT_FROM_EMAIL or 'noreply@agrorise.com',
+                    [enquiry.sender_email],
+                    fail_silently=True
+                )
+        except Exception:
+            pass
+
+        return Response({
+            "status": "success",
+            "message": "Reply saved successfully and notification sent.",
+            "enquiry_id": enquiry.id,
+            "reply": enquiry.reply,
+            "status": enquiry.status
+        }, status=status.HTTP_200_OK)
+
 

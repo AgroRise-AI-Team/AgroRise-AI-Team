@@ -13,6 +13,8 @@ from .views import (
     VerifyOTPView,
     ForgotPasswordSendOTPView,
     ForgotPasswordConfirmView,
+    FarmerEnquiryView,
+    FarmerEnquiryReplyView,
 )
 from .land_analyzer_views import (
     SmartLandAnalyzerView,
@@ -79,6 +81,8 @@ urlpatterns = [
 
     # Public / Visitor Agriculture Data Endpoints
     path('farmers/agriculture-data/', FarmerAgricultureDataView.as_view(), name='farmer_agriculture_data'),
+    path('farmers/enquiries/', FarmerEnquiryView.as_view(), name='farmer_enquiries'),
+    path('farmers/enquiries/<int:pk>/reply/', FarmerEnquiryReplyView.as_view(), name='farmer_enquiry_reply'),
     path('marketplace/products/', MarketplaceProductListView.as_view(), name='marketplace_products'),
 
     # OTP Verification Endpoints

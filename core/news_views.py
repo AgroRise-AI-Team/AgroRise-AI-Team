@@ -49,7 +49,13 @@ class AgriNewsListView(APIView):
 
             return Response({
                 "status": "success",
+                "is_live": data.get("is_live", True),
+                "mode": data.get("mode", "24h_cycle_active"),
                 "last_updated": data.get("last_updated"),
+                "last_updated_display": data.get("last_updated_display"),
+                "refresh_cycle_hours": data.get("refresh_cycle_hours", 24),
+                "hours_until_next_refresh": data.get("hours_until_next_refresh", 24),
+                "next_refresh_at": data.get("next_refresh_at"),
                 "total": len(articles),
                 "articles": articles
             }, status=status.HTTP_200_OK)
@@ -74,7 +80,13 @@ class AgriNewsRefreshView(APIView):
             return Response({
                 "status": "success",
                 "message": "AI News Analysis refreshed successfully.",
+                "is_live": data.get("is_live", True),
+                "mode": data.get("mode", "freshly_updated"),
                 "last_updated": data.get("last_updated"),
+                "last_updated_display": data.get("last_updated_display"),
+                "refresh_cycle_hours": data.get("refresh_cycle_hours", 24),
+                "hours_until_next_refresh": data.get("hours_until_next_refresh", 24),
+                "next_refresh_at": data.get("next_refresh_at"),
                 "total": len(data.get("articles", [])),
                 "articles": data.get("articles", [])
             }, status=status.HTTP_200_OK)

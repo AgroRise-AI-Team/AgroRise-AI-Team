@@ -24,8 +24,6 @@ load_dotenv(BASE_DIR / '.env')
 # Active Multimodal Vision Models (prioritized)
 VISION_MODELS = [
     "gemini-flash-lite-latest",
-    "gemini-3.1-flash-lite",
-    "gemini-3.1-flash-lite-preview",
     "gemini-flash-latest",
 ]
 
@@ -98,6 +96,7 @@ def analyze_with_gemini_vision(image_bytes: bytes, mime_type: str = "image/jpeg"
     """
     Sends uploaded leaf photo to Gemini Vision API with structured agronomic prompt.
     """
+    load_dotenv(BASE_DIR / '.env', override=True)
     gemini_key = os.environ.get("GEMINI_API_KEY", "").strip()
 
     if not gemini_key or gemini_key == "your_gemini_api_key_here":

@@ -3,9 +3,13 @@ import { agricultureApi } from '../../services/api';
 import { KERALA_DISTRICTS } from '../../constants/enums';
 import { useAuth } from '../../context/AuthContext';
 import AgriNewsSection from './AgriNewsSection';
+import ContactFarmerModal from '../common/ContactFarmerModal';
 
-export default function MainDashboard() {
-  const { user, t } = useAuth();
+export default function MainDashboard({ onOpenEnquiries }) {
+  const { user, language, t } = useAuth();
+  const profile = user?.profile || {};
+  const isFarmer = profile.role === 'FARMER';
+
   const [farmers, setFarmers] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -17,6 +21,9 @@ export default function MainDashboard() {
 
   // Selected image modal preview
   const [previewImage, setPreviewImage] = useState(null);
+  
+  // Selected farmer for enquiry modal
+  const [contactFarmer, setContactFarmer] = useState(null);
 
   useEffect(() => {
     fetchAgricultureData();
@@ -53,10 +60,11 @@ export default function MainDashboard() {
   });
 
   // Calculate statistics
-  const totalFarmers = farmers.length;
-  const totalAcres = farmers.reduce((sum, f) => sum + (parseFloat(f.land_area) || 0), 0).toFixed(1);
-  const farmersWithImages = farmers.filter(f => f.land_image_url).length;
-  const uniqueCrops = Array.from(new Set(farmers.map(f => f.current_crop).filter(Boolean)));
+  const safeFarmersList = Array.isArray(farmers) ? farmers : [];
+  const totalFarmers = safeFarmersList.length;
+  const totalAcres = safeFarmersList.reduce((sum, f) => sum + (parseFloat(f?.land_area) || 0), 0).toFixed(1);
+  const farmersWithImages = safeFarmersList.filter(f => f?.land_image_url).length;
+  const uniqueCrops = Array.from(new Set(safeFarmersList.map(f => f?.current_crop).filter(Boolean)));
 
   return (
     <div className="main-dashboard-container">
@@ -64,19 +72,36 @@ export default function MainDashboard() {
       <section className="dashboard-hero-section">
         <div className="hero-text-block">
           <div className="hero-pill-badge">
-            <span className="live-dot"></span> {t.visitorsPortalTag}
+            <span className="live-dot"></span> {isFarmer ? t.visitorsPortalTag : (language === 'ml' ? 'കർഷക വിവരങ്ങൾ • സംശയ നിവാരണ കേന്ദ്രം' : 'Kerala Farmers Directory • Agricultural Consultation')}
           </div>
-          <h1 className="hero-heading">{t.visitorsHeading}</h1>
+          <h1 className="hero-heading">
+            {isFarmer ? t.visitorsHeading : (language === 'ml' ? '🌾 കേരള കർഷക ഡയറക്ടറിയും ഫീഡും' : '🌾 Kerala Farmers & Crop Hub')}
+          </h1>
           <p className="hero-subtext">
-            {t.visitorsSubtext}
+            {isFarmer 
+              ? t.visitorsSubtext 
+              : (language === 'ml'
+                  ? 'കേരളത്തിലെ കർഷകരുടെ കൃഷിയിട വിവരങ്ങൾ, വിളവുകൾ, ചിത്രങ്ങൾ എന്നിവ കാണാം. വിള സംശയങ്ങൾക്ക് കർഷകരുമായി നേരിട്ട് ബന്ധപ്പെടാം.'
+                  : 'Explore certified farmer records, land details, and photos. Clear cultivation and crop doubts directly with local Kerala farmers.')}
           </p>
-          {user && (
-            <div style={{ display: 'inline-flex', alignItems: 'center', gap: '8px', background: 'rgba(255,255,255,0.18)', padding: '6px 14px', borderRadius: '10px', fontSize: '0.84rem', marginTop: '6px' }}>
-              <span>👋 {t.loggedInAs}</span>
-              <strong style={{ color: '#ffffff' }}>{user.username}</strong>
-              <span style={{ opacity: 0.85 }}>({user.profile?.role || 'VISITOR'} • {user.profile?.district || 'Kerala'})</span>
-            </div>
-          )}
+          <div style={{ display: 'flex', alignItems: 'center', gap: '10px', flexWrap: 'wrap', marginTop: '8px' }}>
+            {user && (
+              <div style={{ display: 'inline-flex', alignItems: 'center', gap: '8px', background: 'rgba(255,255,255,0.18)', padding: '6px 14px', borderRadius: '10px', fontSize: '0.84rem' }}>
+                <span>👋 {t.loggedInAs}</span>
+                <strong style={{ color: '#ffffff' }}>{user.username}</strong>
+                <span style={{ opacity: 0.85 }}>({isFarmer ? 'FARMER' : 'NORMAL USER'} • {user.profile?.district || 'Kerala'})</span>
+              </div>
+            )}
+            {!isFarmer && onOpenEnquiries && (
+              <button 
+                type="button" 
+                className="hero-view-enquiries-btn"
+                onClick={onOpenEnquiries}
+              >
+                📩 {language === 'ml' ? 'എന്റെ സംശയങ്ങൾ കാണുക' : 'View My Doubts & Replies'}
+              </button>
+            )}
+          </div>
         </div>
 
         {/* Stats Row */}
@@ -200,11 +225,11 @@ export default function MainDashboard() {
               <div className="farmer-card-header">
                 <div className="farmer-meta">
                   <div className="farmer-avatar-badge">
-                    {farmer.farmer_display_name.charAt(0).toUpperCase()}
+                    {((farmer.farmer_display_name || farmer.farmer_username || 'F')).charAt(0).toUpperCase()}
                   </div>
                   <div>
                     <h3 className="farmer-name">
-                      {farmer.farmer_display_name}
+                      {farmer.farmer_display_name || farmer.farmer_username || 'Kerala Farmer'}
                       {farmer.is_verified_farmer && (
                         <span className="verified-badge-tag" title="Verified Kerala Farmer">✓ Verified</span>
                       )}
@@ -303,6 +328,39 @@ export default function MainDashboard() {
                 </div>
               )}
 
+              {/* Farmer Contact & Enquiry Action Bar */}
+              <div className="farmer-card-contact-bar">
+                <button
+                  type="button"
+                  className="btn-card-ask-doubt"
+                  onClick={() => setContactFarmer(farmer)}
+                  title={`Ask ${farmer.farmer_display_name} a question`}
+                >
+                  📩 {language === 'ml' ? 'കർഷകനോട് ചോദിക്കാം' : 'Clear Doubt / Contact'}
+                </button>
+
+                {farmer.phone_number && (
+                  <div className="farmer-card-quick-actions">
+                    <a
+                      href={`tel:${farmer.phone_number}`}
+                      className="quick-icon-btn-call"
+                      title={`Call ${farmer.farmer_display_name} (${farmer.phone_number})`}
+                    >
+                      📞
+                    </a>
+                    <a
+                      href={`https://wa.me/${farmer.phone_number.replace(/[^0-9]/g, '')}?text=${encodeURIComponent('Hello, I saw your farm on AgroRise AI and have a farming doubt.')}`}
+                      target="_blank"
+                      rel="noreferrer"
+                      className="quick-icon-btn-wa"
+                      title="WhatsApp Chat"
+                    >
+                      💬
+                    </a>
+                  </div>
+                )}
+              </div>
+
               {/* Footer info */}
               <div className="farmer-card-footer">
                 <span className="update-timestamp">
@@ -330,6 +388,16 @@ export default function MainDashboard() {
             </div>
           </div>
         </div>
+      )}
+
+      {/* Clear Doubts / Contact Farmer Enquiry Modal */}
+      {contactFarmer && (
+        <ContactFarmerModal
+          farmer={contactFarmer}
+          isOpen={Boolean(contactFarmer)}
+          onClose={() => setContactFarmer(null)}
+          onSuccess={() => {}}
+        />
       )}
     </div>
   );

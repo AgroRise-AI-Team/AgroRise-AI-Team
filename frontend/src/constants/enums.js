@@ -60,13 +60,10 @@ export const LAND_AREA_UNITS = [
   { value: "HECTARES", label: "Hectares" }
 ];
 
-// User Roles
+// User Roles (strictly two roles: Farmer and Normal User)
 export const USER_ROLES = [
   { value: "FARMER", label: "Farmer (കർഷകൻ)" },
-  { value: "VISITOR", label: "Visitor / Public (സന്ദർശകൻ)" },
-  { value: "BUYER", label: "Buyer / Trader (വ്യാപാരി)" },
-  { value: "BOTH", label: "Farmer & Buyer" },
-  { value: "EXPERT", label: "Agricultural Officer / Expert" }
+  { value: "USER", label: "Normal User (സാധാരണ ഉപയോക്താവ്)" }
 ];
 
 // Default district location profiles for 14 Kerala districts (offline fallback & instant UI response)

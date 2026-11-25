@@ -16,12 +16,17 @@ export const TRANSLATIONS = {
     switchLanguage: 'Switch to Malayalam',
 
     // Navbar Tabs
-    tabDashboard: 'Visitors Dashboard',
+    tabDashboard: 'Visitors & Farmers Directory',
     tabFeed: 'Agriculture Feed',
     tabLandAnalyzer: 'Smart Land Analyzer',
     tabProfitEstimator: 'Crop Profit Estimator',
+    tabNews: 'Agri News & Schemes',
+    tabEnquiries: 'Farmer Enquiries & Doubts',
     tabProfile: 'Farmer Profile',
     tabSettings: 'Account Settings',
+    contactFarmer: 'Contact Farmer',
+    askDoubt: 'Clear Doubts with Farmer',
+    enquirySuccess: 'Enquiry submitted! The farmer has been notified.',
 
     // Entry & Landing Page
     entryHeadline1: 'Grow Smarter.',
@@ -45,9 +50,7 @@ export const TRANSLATIONS = {
     selectDistrict: 'Select District',
     role: 'Your Role',
     roleFarmer: 'Farmer (കൃഷിക്കാരൻ)',
-    roleBuyer: 'Buyer / Trader (വ്യാപാരി)',
-    roleVisitor: 'Visitor / Enthusiast (സന്ദർശകൻ)',
-    roleBoth: 'Farmer & Buyer',
+    roleUser: 'Normal User (സാധാരണ ഉപയോക്താവ്)',
     landArea: 'Land Area (Acres/Cents)',
     soilType: 'Primary Soil Type',
     sendOtp: 'Send Email OTP',
@@ -119,6 +122,15 @@ export const TRANSLATIONS = {
     chatSuggestedPrompt: 'Common Farmer Questions:',
     chatWelcomeTitle: 'Namaskaram! How can I help your farm today?',
     chatWelcomeDesc: 'Ask questions in English or Malayalam about crop diseases, pest remedies, fertilizer doses, weather alerts, or government subsidies.',
+    voiceChatMode: 'Voice Chat Mode',
+    startVoiceMode: 'Start Voice Chat',
+    exitVoiceMode: 'Switch to Text',
+    voiceListening: 'Listening... Speak your farming doubt',
+    voiceSpeaking: 'Speaking advice...',
+    voiceMicDenied: 'Microphone permission denied. Please allow microphone access.',
+    autoSpeak: 'Auto-Speak Responses',
+    speakAnswer: 'Listen to Answer',
+    stopSpeaking: 'Stop Speaking',
 
     // Leaf Doctor / Crop Pathology Scanner
     tabLeafDoctor: 'AI Leaf Doctor',
@@ -152,12 +164,17 @@ export const TRANSLATIONS = {
     switchLanguage: 'Switch to English',
 
     // Navbar Tabs
-    tabDashboard: 'സന്ദർശക ഡാഷ്‌ബോർഡ്',
+    tabDashboard: 'കർഷക വിവരങ്ങൾ & ഫീഡ്',
     tabFeed: 'കാർഷിക ഫീഡ്',
-    tabLandAnalyzer: 'സ്മാർട്ട് ലാൻഡ് അനലൈസർ',
-    tabProfitEstimator: 'വിള ലാഭ എസ്റ്റിമേറ്റർ',
+    tabLandAnalyzer: 'ലാൻഡ് അനലൈസർ',
+    tabProfitEstimator: 'വിള ലാഭ കണക്ക്',
+    tabNews: 'കാർഷിക വാർത്തകൾ',
+    tabEnquiries: 'കർഷക സംശയങ്ങൾ',
     tabProfile: 'കർഷക പ്രൊഫൈൽ',
     tabSettings: 'അക്കൗണ്ട് ക്രമീകരണങ്ങൾ',
+    contactFarmer: 'കർഷകനോട് ചോദിക്കുക',
+    askDoubt: 'കർഷകനുമായി സംശയങ്ങൾ ദൂരീകരിക്കാം',
+    enquirySuccess: 'സംശയം അയച്ചു! കർഷകന് അറിയിപ്പ് ലഭിച്ചു.',
 
     // Entry & Landing Page
     entryHeadline1: 'കൂടുതൽ വിവേകത്തോടെ കൃഷി ചെയ്യാം.',
@@ -181,9 +198,7 @@ export const TRANSLATIONS = {
     selectDistrict: 'ജില്ല തിരഞ്ഞെടുക്കുക',
     role: 'നിങ്ങളുടെ റോൾ',
     roleFarmer: 'കർഷകൻ (Farmer)',
-    roleBuyer: 'വ്യാപാരി (Buyer)',
-    roleVisitor: 'സന്ദർശകൻ (Visitor)',
-    roleBoth: 'കർഷകനും വ്യാപാരിയും',
+    roleUser: 'സാധാരണ ഉപയോക്താവ് (Normal User)',
     landArea: 'ഭൂമിയുടെ വിസ്തീർണ്ണം (ഏക്കർ/സെന്റ്)',
     soilType: 'മണ്ണിന്റെ തരം',
     sendOtp: 'ഇമെയിൽ ഒ.ടി.പി അയക്കുക',
@@ -255,6 +270,15 @@ export const TRANSLATIONS = {
     chatSuggestedPrompt: 'കർഷകർ പതിവായി ചോദിക്കുന്ന ചോദ്യങ്ങൾ:',
     chatWelcomeTitle: 'നമസ്കാരം! നിങ്ങളുടെ കൃഷിയെക്കുറിച്ച് എന്ത് സംശയമാണ് ഉള്ളത്?',
     chatWelcomeDesc: 'വിള രോഗങ്ങൾ, കീടനാശിനികൾ, വളങ്ങൾ, മണ്ണ് പരിശോധന, സർക്കാർ സബ്സിഡികൾ എന്നിവയെക്കുറിച്ച് മലയാളത്തിലോ ഇംഗ്ലീഷിലോ ചോദിക്കാം.',
+    voiceChatMode: 'വോയ്‌സ് ചാറ്റ് മോഡ്',
+    startVoiceMode: 'വോയ്‌സ് ചാറ്റ് തുടങ്ങാം',
+    exitVoiceMode: 'ടെക്സ്റ്റ് ചാറ്റിലേക്ക് മടങ്ങുക',
+    voiceListening: 'ശ്രദ്ധിക്കുന്നു... കാർഷിക സംശയങ്ങൾ പറയൂ',
+    voiceSpeaking: 'മറുപടി പറയുന്നു...',
+    voiceMicDenied: 'മൈക്രോഫോൺ അനുമതി ലഭിച്ചില്ല. ബ്രൗസറിൽ മൈക്ക് അനുവദിക്കുക.',
+    autoSpeak: 'മറുപടി ശബ്ദത്തിൽ കേൾക്കുക',
+    speakAnswer: 'ശബ്ദത്തിൽ കേൾക്കാം',
+    stopSpeaking: 'ശബ്ദം നിർത്തുക',
 
     // Leaf Doctor / Crop Pathology Scanner
     tabLeafDoctor: 'ഇല രോഗ നിർണ്ണയം',

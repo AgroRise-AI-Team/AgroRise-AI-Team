@@ -157,7 +157,7 @@ export default function RegisterModal({ isOpen, onClose, onSwitchToLogin }) {
   const stepLabels = [
     { n: 1, label: 'Account Details' },
     { n: 2, label: 'Email Verification' },
-    { n: 3, label: formData.profile.role === 'VISITOR' ? 'Preferences' : 'Farm Profile' },
+    { n: 3, label: formData.profile.role === 'USER' ? 'User Preferences' : 'Farm Profile' },
   ];
 
   return (
@@ -246,10 +246,7 @@ export default function RegisterModal({ isOpen, onClose, onSwitchToLogin }) {
                   className="modal-select"
                 >
                   <option value="FARMER">Farmer (കർഷകൻ)</option>
-                  <option value="VISITOR">Visitor / Consumer (സന്ദർശകൻ)</option>
-                  <option value="BUYER">Buyer / Trader (വ്യാപാരി)</option>
-                  <option value="BOTH">Farmer & Buyer</option>
-                  <option value="EXPERT">Agricultural Officer / Expert</option>
+                  <option value="USER">Normal User (സാധാരണ ഉപയോക്താവ്)</option>
                 </select>
               </div>
             </div>
@@ -385,14 +382,14 @@ export default function RegisterModal({ isOpen, onClose, onSwitchToLogin }) {
         {step === 3 && (
           <form onSubmit={handleSubmit} className="modal-form">
             <div className="step-pane">
-              {formData.profile.role === 'VISITOR' ? (
+              {formData.profile.role === 'USER' || formData.profile.role === 'VISITOR' ? (
                 <div style={{ padding: '1rem', background: '#f5faf6', borderRadius: '10px', marginBottom: '1.2rem', border: '1px solid #cce3d2' }}>
                   <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '0.6rem' }}>
-                    <span style={{ fontSize: '1.4rem' }}>👁️</span>
-                    <h4 style={{ margin: 0, color: '#0b7a3e', fontSize: '1.05rem' }}>Visitor Account Setup</h4>
+                    <span style={{ fontSize: '1.4rem' }}>👤</span>
+                    <h4 style={{ margin: 0, color: '#0b7a3e', fontSize: '1.05rem' }}>Normal User Setup</h4>
                   </div>
                   <p style={{ fontSize: '0.86rem', color: '#4a6b52', lineHeight: 1.5, margin: '0 0 1rem 0' }}>
-                    As a <strong>Visitor</strong>, you have access to the <strong>Main Agriculture Dashboard</strong> to view real agricultural data, land uploads, and crops published by registered farmers across Kerala.
+                    As a <strong>Normal User</strong>, you have access to the <strong>Main Agriculture Dashboard</strong> to view verified crop records, land uploads, and crops published by registered farmers across Kerala.
                   </p>
                   <div className="form-row-2">
                     <div className="form-group">

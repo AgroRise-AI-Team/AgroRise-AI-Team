@@ -72,8 +72,10 @@ export default function ProfileModule({ isVisitor = false, onGoToDashboard }) {
   };
 
   useEffect(() => {
-    fetchLandDetails();
-  }, []);
+    if (!isVisitor) {
+      fetchLandDetails();
+    }
+  }, [isVisitor]);
 
   // Handlers
   const handleProfileSubmit = async (e) => {
@@ -94,6 +96,7 @@ export default function ProfileModule({ isVisitor = false, onGoToDashboard }) {
   const handlePasswordSubmit = async (e) => {
     e.preventDefault();
     setPassMsg(null);
+    setSaving(true);
     try {
       const res = await authApi.changePassword(oldPassword, newPassword);
       setPassMsg({ type: 'success', text: res.detail || 'Password updated successfully!' });
@@ -101,6 +104,8 @@ export default function ProfileModule({ isVisitor = false, onGoToDashboard }) {
       setNewPassword('');
     } catch (err) {
       setPassMsg({ type: 'error', text: err.message || 'Failed to change password.' });
+    } finally {
+      setSaving(false);
     }
   };
 
@@ -153,9 +158,9 @@ export default function ProfileModule({ isVisitor = false, onGoToDashboard }) {
         <div className="module-header-box" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
           <div>
             <span className="module-pill" style={{ background: '#e0f2fe', color: '#0369a1', borderColor: '#bae6fd' }}>
-              Visitor Account • സന്ദർശക അക്കൗണ്ട്
+              Normal User Account • സാധാരണ ഉപയോക്തൃ അക്കൗണ്ട്
             </span>
-            <h2>Visitor Profile &amp; Settings</h2>
+            <h2>Normal User Profile &amp; Settings</h2>
             <p>Logged in: <strong>{user?.username}</strong> ({user?.email})</p>
           </div>
           {onGoToDashboard && (
@@ -175,7 +180,7 @@ export default function ProfileModule({ isVisitor = false, onGoToDashboard }) {
               }}
             >
               <span>🌾</span>
-              <span>Open Visitors Dashboard →</span>
+              <span>Open Agriculture Dashboard →</span>
             </button>
           )}
         </div>
@@ -185,7 +190,7 @@ export default function ProfileModule({ isVisitor = false, onGoToDashboard }) {
             <div className="settings-card" style={{ background: '#fff', padding: '24px', borderRadius: '16px', border: '1px solid #e1ede4' }}>
               <h3 style={{ marginTop: 0, color: '#122a1b' }}>👤 Account Details</h3>
               <p style={{ color: '#555', fontSize: '0.9rem' }}>
-                You have active <strong>Visitor access</strong> to the AgroRise AI platform. You can monitor live farmer crop records and field uploads across Kerala.
+                You have active <strong>Normal User access</strong> to the AgroRise AI platform. You can monitor live farmer crop records, agricultural advisories, and field uploads across Kerala.
               </p>
               <div style={{ marginTop: '16px', display: 'flex', flexDirection: 'column', gap: '10px' }}>
                 <div style={{ background: '#f8faf8', padding: '10px 14px', borderRadius: '8px' }}>
@@ -199,7 +204,7 @@ export default function ProfileModule({ isVisitor = false, onGoToDashboard }) {
                 <div style={{ background: '#f8faf8', padding: '10px 14px', borderRadius: '8px' }}>
                   <span style={{ fontSize: '0.78rem', color: '#666', display: 'block' }}>Role</span>
                   <span style={{ background: '#e0f2fe', color: '#0369a1', padding: '2px 8px', borderRadius: '6px', fontSize: '0.8rem', fontWeight: 700 }}>
-                    VISITOR / OBSERVER
+                    NORMAL USER
                   </span>
                 </div>
                 <div style={{ background: '#f8faf8', padding: '10px 14px', borderRadius: '8px' }}>
@@ -218,7 +223,7 @@ export default function ProfileModule({ isVisitor = false, onGoToDashboard }) {
                   {passMsg.text}
                 </div>
               )}
-              <form onSubmit={handlePasswordChange}>
+              <form onSubmit={handlePasswordSubmit}>
                 <div className="form-group" style={{ marginBottom: '12px' }}>
                   <label>Current Password</label>
                   <input

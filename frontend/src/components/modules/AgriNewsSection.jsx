@@ -4,11 +4,14 @@ import { useAuth } from '../../context/AuthContext';
 
 const DICTIONARY = {
   en: {
-    liveTag: 'Gemini AI Agricultural Intelligence',
+    liveTag: '🟢 24-Hour Live News',
+    cycleNotice: 'Auto-updated every 24 hours',
+    nextIn: 'Next refresh in',
+    hours: 'hours',
     updated: 'Updated',
     title: '🌱 Real-Time Agricultural News & Farmer Advisories',
-    subtitle: 'Live farming news scanned & analyzed by AI to extract market trends, MSP updates, weather warnings, and direct actionable advice.',
-    refreshBtn: 'Refresh AI Feeds',
+    subtitle: 'Live farming news scanned & analyzed by AI every 24 hours to extract market trends, MSP updates, weather warnings, and direct actionable advice.',
+    refreshBtn: 'Refresh Feeds Now',
     refreshing: 'Analyzing Live Feeds...',
     searchPlaceholder: 'Search by crop, pest, district, or topic...',
     impactLabel: 'Impact:',
@@ -35,11 +38,14 @@ const DICTIONARY = {
     ]
   },
   ml: {
-    liveTag: 'ജെമിനി എ.ഐ കാർഷിക വിവരങ്ങൾ',
+    liveTag: '🟢 തത്സമയ കാർഷിക വാർത്തകൾ',
+    cycleNotice: '24 മണിക്കൂർ തോറും സ്വയമേവ പുതുക്കുന്നു',
+    nextIn: 'അടുത്ത അപ്‌ഡേറ്റ്',
+    hours: 'മണിക്കൂറിൽ',
     updated: 'പുതുക്കിയത്',
     title: '🌱 തത്സമയ കാർഷിക വാർത്തകളും കർഷക നിർദ്ദേശങ്ങളും',
-    subtitle: 'തത്സമയ വാർത്തകൾ എ.ഐ വിശകലനം ചെയ്ത് തയ്യാറാക്കിയ വിപണി വിവരങ്ങൾ, താങ്ങുവില, കാലാവസ്ഥാ മുന്നറിയിപ്പുകൾ, കർഷകർ ചെയ്യേണ്ട കാര്യങ്ങൾ.',
-    refreshBtn: 'വിവരങ്ങൾ പുതുക്കുക',
+    subtitle: 'തത്സമയ വാർത്തകൾ 24 മണിക്കൂർ തോറും എ.ഐ വിശകലനം ചെയ്ത് തയ്യാറാക്കുന്ന വിപണി വിവരങ്ങൾ, താങ്ങുവില, കാലാവസ്ഥാ മുന്നറിയിപ്പുകൾ, കർഷകർ ചെയ്യേണ്ട കാര്യങ്ങൾ.',
+    refreshBtn: 'വിവരങ്ങൾ ഇപ്പോൾ പുതുക്കുക',
     refreshing: 'വാർത്തകൾ വിശകലനം ചെയ്യുന്നു...',
     searchPlaceholder: 'വിളകൾ, കീടങ്ങൾ, ജില്ല, വിഷയം എന്നിവ തിരയുക...',
     impactLabel: 'മുൻഗണന:',
@@ -77,6 +83,7 @@ export default function AgriNewsSection() {
   const [selectedImpact, setSelectedImpact] = useState('ALL');
   const [searchQuery, setSearchQuery] = useState('');
   const [lastUpdated, setLastUpdated] = useState('');
+  const [cycleInfo, setCycleInfo] = useState({ hoursRemaining: 24, isLive: true });
 
   const t = DICTIONARY[lang] || DICTIONARY.en;
 
@@ -97,7 +104,15 @@ export default function AgriNewsSection() {
 
       const data = await newsApi.getLatestNews(params);
       setArticles(data.articles || []);
-      if (data.last_updated) setLastUpdated(data.last_updated);
+      if (data.last_updated_display || data.last_updated) {
+        setLastUpdated(data.last_updated_display || data.last_updated);
+      }
+      if (data.hours_until_next_refresh !== undefined) {
+        setCycleInfo({
+          hoursRemaining: data.hours_until_next_refresh,
+          isLive: data.is_live ?? true
+        });
+      }
     } catch (err) {
       console.error('Error fetching agricultural news:', err);
       setError('Unable to load latest agricultural news.');
@@ -138,12 +153,24 @@ export default function AgriNewsSection() {
 
   return (
     <section className="agri-news-section" style={styles.section}>
-      {/* Top Bar with Language Selector & Pulse */}
+      {/* Top Bar with Language Selector & 24h Pulse */}
       <div style={styles.topBar}>
         <div style={styles.badgeRow}>
           <span style={styles.livePulse}></span>
           <span style={styles.badgeText}>{t.liveTag}</span>
-          {lastUpdated && <span style={styles.lastUpdatedText}>• {t.updated} {lastUpdated}</span>}
+          <span style={{ fontSize: '0.8rem', color: '#047857', fontWeight: 600, background: '#dcfce7', padding: '2px 8px', borderRadius: '6px' }}>
+            {t.cycleNotice}
+          </span>
+          {lastUpdated && (
+            <span style={styles.lastUpdatedText}>
+              • {t.updated}: {lastUpdated}
+            </span>
+          )}
+          {cycleInfo?.hoursRemaining !== undefined && (
+            <span style={{ fontSize: '0.78rem', color: '#6b7280', background: '#f3f4f6', padding: '2px 8px', borderRadius: '6px' }}>
+              ⏳ {t.nextIn}: {cycleInfo.hoursRemaining} {t.hours}
+            </span>
+          )}
         </div>
 
         {/* Language Switcher Buttons */}

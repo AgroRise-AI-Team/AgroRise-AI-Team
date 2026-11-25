@@ -343,6 +343,30 @@ export const leafDiseaseApi = {
   }
 };
 
+// Module: Farmer Enquiries & Clear Doubts API
+export const enquiryApi = {
+  async getEnquiries() {
+    return apiRequest('/api/farmers/enquiries/', {
+      method: 'GET'
+    });
+  },
+
+  async sendEnquiry(payload) {
+    return apiRequest('/api/farmers/enquiries/', {
+      method: 'POST',
+      body: JSON.stringify(payload)
+    });
+  },
+
+  async replyToEnquiry(id, replyText) {
+    return apiRequest(`/api/farmers/enquiries/${id}/reply/`, {
+      method: 'POST',
+      body: JSON.stringify({ reply: replyText })
+    });
+  }
+};
+
+
 
 
 
