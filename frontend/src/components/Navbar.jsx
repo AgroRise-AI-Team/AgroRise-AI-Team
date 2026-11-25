@@ -63,6 +63,16 @@ export default function Navbar({ activeTab = 'dashboard', onSelectTab }) {
 
           <button
             type="button"
+            className={`nav-tab-btn ${activeTab === 'leaf_doctor' ? 'active' : ''}`}
+            onClick={() => onSelectTab && onSelectTab('leaf_doctor')}
+            title="Scan crop leaves for disease diagnosis"
+          >
+            <span className="tab-icon">🍃</span>
+            <span>{t.tabLeafDoctor || 'AI Leaf Doctor'}</span>
+          </button>
+
+          <button
+            type="button"
             className={`nav-tab-btn ${activeTab === 'ai_chat' ? 'active' : ''}`}
             onClick={() => onSelectTab && onSelectTab('ai_chat')}
             title="Chat with AgroRise Gemini AI Assistant"

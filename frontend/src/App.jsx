@@ -7,6 +7,7 @@ import MainDashboard from './components/modules/MainDashboard';
 import SmartLandAnalyzer from './components/modules/SmartLandAnalyzer';
 import CropProfitEstimator from './components/modules/CropProfitEstimator';
 import AgroChatbot from './components/modules/AgroChatbot';
+import LeafDiseaseScanner from './components/modules/LeafDiseaseScanner';
 
 import './App.css';
 
@@ -56,6 +57,7 @@ function MainApp() {
         {activeTab === 'dashboard' && <MainDashboard />}
         {activeTab === 'land_analyzer' && <SmartLandAnalyzer />}
         {activeTab === 'profit_estimator' && <CropProfitEstimator />}
+        {activeTab === 'leaf_doctor' && <LeafDiseaseScanner />}
         {activeTab === 'ai_chat' && <AgroChatbot isFullPage={true} />}
         {activeTab === 'profile' && (
           <ProfileModule isVisitor={!isFarmer} onGoToDashboard={() => setActiveTab('dashboard')} />

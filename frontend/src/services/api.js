@@ -314,6 +314,35 @@ export const chatApi = {
   }
 };
 
+// Module: AI Leaf Disease Detection & Computer Vision API
+export const leafDiseaseApi = {
+  async diagnoseImage(formDataOrPayload, language = 'en') {
+    if (formDataOrPayload instanceof FormData) {
+      if (!formDataOrPayload.has('language')) {
+        formDataOrPayload.append('language', language);
+      }
+      return apiRequest('/api/leaf-disease/diagnose/', {
+        method: 'POST',
+        body: formDataOrPayload
+      });
+    }
+
+    return apiRequest('/api/leaf-disease/diagnose/', {
+      method: 'POST',
+      body: JSON.stringify({
+        ...(typeof formDataOrPayload === 'string' ? { image_base64: formDataOrPayload } : formDataOrPayload),
+        language
+      })
+    });
+  },
+
+  async getSampleCases() {
+    return apiRequest('/api/leaf-disease/samples/', {
+      method: 'GET'
+    });
+  }
+};
+
 
 
 

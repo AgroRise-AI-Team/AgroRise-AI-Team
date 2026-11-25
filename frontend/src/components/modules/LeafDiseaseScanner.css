@@ -1,0 +1,489 @@
+/* ==========================================================================
+   AgroRise AI - Leaf Disease Scanner & Crop Pathology Stylesheet
+   Modern, responsive, glassmorphic & agricultural styling
+   ========================================================================== */
+
+.leaf-scanner-container {
+  padding: 24px;
+  max-width: 1280px;
+  margin: 0 auto;
+  font-family: inherit;
+}
+
+/* Header Banner */
+.leaf-scanner-header {
+  background: linear-gradient(135deg, #065f46 0%, #047857 55%, #059669 100%);
+  color: #ffffff;
+  padding: 24px 28px;
+  border-radius: 20px;
+  margin-bottom: 24px;
+  box-shadow: 0 10px 25px -5px rgba(6, 95, 70, 0.35);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 16px;
+}
+
+.header-badge-tag {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background: rgba(255, 255, 255, 0.16);
+  padding: 4px 12px;
+  border-radius: 20px;
+  font-size: 0.78rem;
+  font-weight: 700;
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
+  margin-bottom: 8px;
+}
+
+.header-title {
+  font-size: 1.8rem;
+  font-weight: 800;
+  margin: 0 0 6px 0;
+  letter-spacing: -0.5px;
+}
+
+.header-subtitle {
+  font-size: 0.92rem;
+  opacity: 0.92;
+  margin: 0;
+  max-width: 680px;
+  line-height: 1.45;
+}
+
+/* Main Grid Layout */
+.scanner-grid-layout {
+  display: grid;
+  grid-template-columns: minmax(340px, 460px) 1fr;
+  gap: 24px;
+  align-items: start;
+}
+
+/* Upload Card */
+.upload-panel-card {
+  background: #ffffff;
+  border-radius: 18px;
+  border: 1px solid #e2e8f0;
+  padding: 22px;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.04);
+}
+
+.dropzone-box {
+  border: 2px dashed #10b981;
+  background: #f0fdf4;
+  border-radius: 16px;
+  padding: 28px 18px;
+  text-align: center;
+  cursor: pointer;
+  transition: all 0.25s ease;
+  position: relative;
+  overflow: hidden;
+}
+
+.dropzone-box:hover, .dropzone-box.drag-active {
+  background: #ecfdf5;
+  border-color: #059669;
+  transform: translateY(-2px);
+}
+
+.dropzone-icon-circle {
+  width: 58px;
+  height: 58px;
+  background: #ffffff;
+  border: 2px solid #a7f3d0;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.8rem;
+  margin: 0 auto 12px auto;
+  box-shadow: 0 4px 10px rgba(16, 185, 129, 0.15);
+}
+
+.dropzone-prompt-title {
+  font-size: 1rem;
+  font-weight: 700;
+  color: #065f46;
+  margin-bottom: 4px;
+}
+
+.dropzone-prompt-sub {
+  font-size: 0.8rem;
+  color: #64748b;
+  margin: 0;
+}
+
+/* Image Preview with Laser Scanning Animation */
+.image-preview-wrapper {
+  position: relative;
+  border-radius: 14px;
+  overflow: hidden;
+  border: 2px solid #059669;
+  margin-top: 14px;
+  background: #000000;
+  max-height: 320px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.preview-img {
+  width: 100%;
+  height: auto;
+  max-height: 320px;
+  object-fit: contain;
+  display: block;
+}
+
+/* Laser Scanner Bar */
+.scanning-laser-line {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 4px;
+  background: linear-gradient(90deg, transparent, #34d399, #10b981, #34d399, transparent);
+  box-shadow: 0 0 16px 4px #10b981;
+  animation: laserScan 2s infinite ease-in-out;
+  z-index: 10;
+}
+
+@keyframes laserScan {
+  0% { top: 0%; opacity: 0.8; }
+  50% { top: 96%; opacity: 1; }
+  100% { top: 0%; opacity: 0.8; }
+}
+
+.scanning-pulse-overlay {
+  position: absolute;
+  inset: 0;
+  background: rgba(16, 185, 129, 0.12);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  color: #ffffff;
+  font-weight: 700;
+  font-size: 0.95rem;
+  text-shadow: 0 2px 6px rgba(0,0,0,0.8);
+  backdrop-filter: blur(1px);
+}
+
+/* Action Buttons */
+.scanner-action-btn {
+  width: 100%;
+  margin-top: 14px;
+  background: #059669;
+  color: #ffffff;
+  border: none;
+  padding: 14px;
+  border-radius: 12px;
+  font-size: 1rem;
+  font-weight: 700;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  transition: all 0.2s;
+  box-shadow: 0 4px 12px rgba(5, 150, 105, 0.3);
+}
+
+.scanner-action-btn:hover:not(:disabled) {
+  background: #047857;
+  transform: translateY(-1px);
+  box-shadow: 0 6px 16px rgba(5, 150, 105, 0.4);
+}
+
+.scanner-action-btn:disabled {
+  background: #94a3b8;
+  cursor: not-allowed;
+  transform: none;
+  box-shadow: none;
+}
+
+/* Sample Cases Strip */
+.sample-cases-panel {
+  margin-top: 20px;
+  border-top: 1px solid #f1f5f9;
+  padding-top: 16px;
+}
+
+.sample-title-label {
+  font-size: 0.78rem;
+  font-weight: 800;
+  text-transform: uppercase;
+  color: #059669;
+  margin-bottom: 10px;
+  letter-spacing: 0.5px;
+}
+
+.sample-buttons-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
+}
+
+.sample-chip-card {
+  background: #f8fafc;
+  border: 1px solid #e2e8f0;
+  border-radius: 10px;
+  padding: 8px 10px;
+  text-align: left;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.sample-chip-card:hover {
+  background: #ecfdf5;
+  border-color: #10b981;
+  transform: translateY(-1px);
+}
+
+.sample-crop-name {
+  font-size: 0.82rem;
+  font-weight: 700;
+  color: #065f46;
+  display: block;
+}
+
+.sample-disease-sub {
+  font-size: 0.72rem;
+  color: #64748b;
+  display: block;
+}
+
+/* Pathology Results Display Card */
+.results-panel-wrapper {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+/* Empty State Card */
+.empty-scanner-card {
+  background: #ffffff;
+  border-radius: 18px;
+  border: 2px dashed #cbd5e1;
+  padding: 56px 28px;
+  text-align: center;
+  color: #64748b;
+}
+
+/* Primary Diagnosis Crown Card */
+.diagnosis-hero-card {
+  background: #ffffff;
+  border-radius: 18px;
+  border: 1.5px solid #cbd5e1;
+  padding: 24px;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.05);
+}
+
+.hero-card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 16px;
+  padding-bottom: 16px;
+  border-bottom: 1px solid #f1f5f9;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+
+.diagnosis-badge-healthy {
+  background: #dcfce7;
+  color: #15803d;
+  border: 1px solid #86efac;
+  padding: 6px 14px;
+  border-radius: 30px;
+  font-size: 0.85rem;
+  font-weight: 700;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.diagnosis-badge-infected {
+  background: #fee2e2;
+  color: #b91c1c;
+  border: 1px solid #fca5a5;
+  padding: 6px 14px;
+  border-radius: 30px;
+  font-size: 0.85rem;
+  font-weight: 700;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.plant-label-tag {
+  font-size: 0.84rem;
+  color: #64748b;
+  font-weight: 600;
+  margin-bottom: 2px;
+}
+
+.disease-main-heading {
+  font-size: 1.5rem;
+  font-weight: 800;
+  color: #0f172a;
+  margin: 0;
+  line-height: 1.25;
+}
+
+.pathogen-scientific-name {
+  font-size: 0.85rem;
+  color: #059669;
+  font-style: italic;
+  font-weight: 600;
+  margin-top: 4px;
+}
+
+/* Confidence Score Bar */
+.confidence-box {
+  background: #f8fafc;
+  border: 1px solid #e2e8f0;
+  border-radius: 12px;
+  padding: 12px 16px;
+  margin-bottom: 20px;
+}
+
+.confidence-header-row {
+  display: flex;
+  justify-content: space-between;
+  font-size: 0.82rem;
+  font-weight: 700;
+  color: #475569;
+  margin-bottom: 6px;
+}
+
+.confidence-progress-track {
+  width: 100%;
+  height: 8px;
+  background: #e2e8f0;
+  border-radius: 10px;
+  overflow: hidden;
+}
+
+.confidence-progress-fill {
+  height: 100%;
+  background: linear-gradient(90deg, #10b981 0%, #059669 100%);
+  border-radius: 10px;
+  transition: width 0.8s ease;
+}
+
+/* Symptoms Section */
+.symptoms-card-box {
+  background: #f8fafc;
+  border-radius: 12px;
+  padding: 16px;
+  margin-bottom: 20px;
+  border: 1px solid #e2e8f0;
+}
+
+.symptoms-title {
+  font-size: 0.88rem;
+  font-weight: 700;
+  color: #1e293b;
+  margin: 0 0 10px 0;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.symptoms-list {
+  margin: 0;
+  padding-left: 20px;
+  font-size: 0.85rem;
+  color: #334155;
+  line-height: 1.5;
+}
+
+.symptoms-list li {
+  margin-bottom: 4px;
+}
+
+/* Dual Treatment Prescription Cards */
+.treatments-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+  margin-bottom: 20px;
+}
+
+.treatment-box {
+  border-radius: 14px;
+  padding: 18px;
+  border: 1px solid;
+}
+
+.organic-treatment-box {
+  background: linear-gradient(145deg, #f0fdf4 0%, #ecfdf5 100%);
+  border-color: #a7f3d0;
+}
+
+.chemical-treatment-box {
+  background: linear-gradient(145deg, #eff6ff 0%, #f0fdfa 100%);
+  border-color: #bae6fd;
+}
+
+.treatment-header-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 0.9rem;
+  font-weight: 700;
+  margin-bottom: 10px;
+}
+
+.organic-treatment-box .treatment-header-row {
+  color: #065f46;
+}
+
+.chemical-treatment-box .treatment-header-row {
+  color: #0369a1;
+}
+
+.treatment-text-body {
+  font-size: 0.85rem;
+  color: #1e293b;
+  line-height: 1.5;
+  margin: 0;
+}
+
+/* Prevention Advice Box */
+.prevention-advice-card {
+  background: #fffbeb;
+  border: 1px solid #fde68a;
+  border-radius: 14px;
+  padding: 16px 20px;
+}
+
+.prevention-title {
+  font-size: 0.88rem;
+  font-weight: 700;
+  color: #92400e;
+  margin: 0 0 8px 0;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.prevention-text {
+  font-size: 0.84rem;
+  color: #78350f;
+  line-height: 1.45;
+  margin: 0;
+}
+
+@media (max-width: 860px) {
+  .scanner-grid-layout {
+    grid-template-columns: 1fr;
+  }
+  .treatments-grid {
+    grid-template-columns: 1fr;
+  }
+}

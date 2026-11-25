@@ -118,7 +118,25 @@ export const TRANSLATIONS = {
     chatClear: 'Clear Chat',
     chatSuggestedPrompt: 'Common Farmer Questions:',
     chatWelcomeTitle: 'Namaskaram! How can I help your farm today?',
-    chatWelcomeDesc: 'Ask questions in English or Malayalam about crop diseases, pest remedies, fertilizer doses, weather alerts, or government subsidies.'
+    chatWelcomeDesc: 'Ask questions in English or Malayalam about crop diseases, pest remedies, fertilizer doses, weather alerts, or government subsidies.',
+
+    // Leaf Doctor / Crop Pathology Scanner
+    tabLeafDoctor: 'AI Leaf Doctor',
+    leafDoctorHeading: 'AI Plant Disease & Leaf Pathology Scanner',
+    leafDoctorSub: 'Instant crop disease diagnosis and KAU-verified treatment prescriptions powered by Deep Learning Computer Vision.',
+    uploadLeafPhoto: 'Upload Leaf Photo',
+    dragAndDropLeaf: 'Drag and drop a clear leaf photo here, or browse files',
+    supportsCamera: 'Supports mobile camera capture, JPG, PNG & WebP (Max 10MB)',
+    btnScanLeaf: 'Scan Leaf for Diseases with AI',
+    scanningLeaf: 'AI is analyzing leaf lesions & cellular pathology...',
+    sampleCasesTitle: 'Try Instant Benchmark Cases:',
+    healthyLeaf: 'Healthy Crop Leaf',
+    diseaseDetected: 'Crop Infection Detected',
+    confidence: 'Confidence',
+    symptoms: 'Visual Symptoms & Pathology',
+    organicRemedy: 'Organic & Bio-Control Solution',
+    chemicalRemedy: 'Recommended Chemical Treatment & Dosage',
+    prevention: 'Prevention & Field Management'
   },
 
   ml: {
@@ -236,6 +254,24 @@ export const TRANSLATIONS = {
     chatClear: 'ചാറ്റ് ഒഴിവാക്കുക',
     chatSuggestedPrompt: 'കർഷകർ പതിവായി ചോദിക്കുന്ന ചോദ്യങ്ങൾ:',
     chatWelcomeTitle: 'നമസ്കാരം! നിങ്ങളുടെ കൃഷിയെക്കുറിച്ച് എന്ത് സംശയമാണ് ഉള്ളത്?',
-    chatWelcomeDesc: 'വിള രോഗങ്ങൾ, കീടനാശിനികൾ, വളങ്ങൾ, മണ്ണ് പരിശോധന, സർക്കാർ സബ്സിഡികൾ എന്നിവയെക്കുറിച്ച് മലയാളത്തിലോ ഇംഗ്ലീഷിലോ ചോദിക്കാം.'
+    chatWelcomeDesc: 'വിള രോഗങ്ങൾ, കീടനാശിനികൾ, വളങ്ങൾ, മണ്ണ് പരിശോധന, സർക്കാർ സബ്സിഡികൾ എന്നിവയെക്കുറിച്ച് മലയാളത്തിലോ ഇംഗ്ലീഷിലോ ചോദിക്കാം.',
+
+    // Leaf Doctor / Crop Pathology Scanner
+    tabLeafDoctor: 'ഇല രോഗ നിർണ്ണയം',
+    leafDoctorHeading: 'എ.ഐ ഇല രോഗ നിർണ്ണയ സ്കാനർ',
+    leafDoctorSub: 'ഇലയുടെ ഫോട്ടോ അപ്‌ലോഡ് ചെയ്ത് രോഗങ്ങളും കർഷക സർവ്വകലാശാല നിർദ്ദേശിച്ച പരിഹാര മാർഗ്ഗങ്ങളും കണ്ടെത്തുക.',
+    uploadLeafPhoto: 'ഇലയുടെ ഫോട്ടോ ചേർക്കുക',
+    dragAndDropLeaf: 'ഇലയുടെ വ്യക്തമായ ഫോട്ടോ ഇവിടെ ഡ്രാഗ് ചെയ്യുകയോ തിരഞ്ഞെടുക്കുകയോ ചെയ്യുക',
+    supportsCamera: 'മൊബൈൽ ക്യാമറ ഫോട്ടോ, JPG, PNG എന്നിവ പിന്തുണയ്ക്കുന്നു (പരമാവധി 10MB)',
+    btnScanLeaf: 'എ.ഐ ഉപയോഗിച്ച് ഇല സ്കാൻ ചെയ്യുക',
+    scanningLeaf: 'എ.ഐ ഇലയിലെ പാടുകളും രോഗലക്ഷണങ്ങളും വിശകലനം ചെയ്യുന്നു...',
+    sampleCasesTitle: 'പരീക്ഷിച്ച് നോക്കാവുന്ന മാതൃകകൾ:',
+    healthyLeaf: 'ആരോഗ്യമുള്ള ഇല',
+    diseaseDetected: 'വിള രോഗം കണ്ടെത്തി',
+    confidence: 'കൃത്യത',
+    symptoms: 'രോഗലക്ഷണങ്ങൾ',
+    organicRemedy: 'ജൈവ നിയന്ത്രണ പരിഹാരം',
+    chemicalRemedy: 'രാസ പ്രതിരോധ മരുന്നും അളവും',
+    prevention: 'പ്രതിരോധ നിർദ്ദേശങ്ങൾ'
   }
 };

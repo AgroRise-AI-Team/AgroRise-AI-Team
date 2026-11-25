@@ -36,6 +36,11 @@ from .chat_views import (
     AgroChatSuggestionsView,
 )
 
+from .leaf_views import (
+    LeafDiseaseDiagnosisView,
+    LeafDiseaseSampleCasesView,
+)
+
 urlpatterns = [
     # Auth endpoints
     path('register/', RegisterView.as_view(), name='register_alt'),
@@ -90,6 +95,10 @@ urlpatterns = [
     path('chat/', AgroChatbotView.as_view(), name='agri_chat'),
     path('ai/chat/', AgroChatbotView.as_view(), name='agri_chat_alt'),
     path('chat/suggestions/', AgroChatSuggestionsView.as_view(), name='agri_chat_suggestions'),
+
+    # Leaf Disease Detection & Computer Vision Endpoints
+    path('leaf-disease/diagnose/', LeafDiseaseDiagnosisView.as_view(), name='leaf_disease_diagnose'),
+    path('leaf-disease/samples/', LeafDiseaseSampleCasesView.as_view(), name='leaf_disease_samples'),
 ]
 
 
