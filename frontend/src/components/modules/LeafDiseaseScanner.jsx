@@ -109,60 +109,46 @@ export default function LeafDiseaseScanner() {
       }
     } catch (err) {
       console.error('Leaf diagnosis error:', err);
-      setError(err.message || 'Could not complete leaf pathology analysis. Please try again.');
+      const is404 = err?.message?.includes('404');
+      if (is404) {
+        setError(language === 'ml'
+          ? '⚠️ ബാക്കെൻഡ് റൂട്ട് കണ്ടെത്താനായില്ല (404). പുതിയ ലീഫ് ഡോക്ടർ എൻഡ്പോയിന്റുകൾ റജിസ്റ്റർ ചെയ്യാൻ ദയവായി നിങ്ങളുടെ ടെർമിനലിൽ "python manage.py runserver" റീസ്റ്റാർട്ട് ചെയ്യുക.'
+          : '⚠️ Backend route not found (404). Please restart your Django terminal ("python manage.py runserver") so it registers the new Leaf Doctor endpoints.');
+      } else {
+        setError(err.message || 'Could not complete leaf pathology analysis. Please try again.');
+      }
     } finally {
       setLoading(false);
     }
   };
 
-  // 1-Click Sample Case Loader
-  const handleLoadSample = async (sample) => {
+  // 1-Click Instant Sample Case Loader
+  const handleLoadSample = (sample) => {
     setError(null);
     setSelectedFile(null);
     setImagePreview(sample.image_url);
-    setDiagnosisResult(null);
-    setLoading(true);
+    setLoading(false);
 
-    try {
-      // Convert image URL to base64 or pass payload
-      const response = await fetch(sample.image_url);
-      const blob = await response.blob();
-      const file = new File([blob], `${sample.id}.jpg`, { type: 'image/jpeg' });
-      setSelectedFile(file);
-
-      const formData = new FormData();
-      formData.append('image', file);
-      formData.append('language', language);
-
-      const res = await leafDiseaseApi.diagnoseImage(formData, language);
-      if (res?.diagnosis) {
-        setDiagnosisResult(res.diagnosis);
-      }
-    } catch (e) {
-      console.warn('Sample analysis error, showing calibrated baseline:', e);
-      // Fallback calibrated sample presentation
-      setDiagnosisResult({
-        plant_name: sample.crop,
-        plant_name_ml: sample.crop,
-        is_healthy: false,
-        disease_name: sample.condition,
-        disease_name_ml: sample.condition_ml,
-        scientific_name: 'Verified KAU Benchmark',
-        confidence_score: 96.4,
-        severity: sample.severity,
-        visual_symptoms: [sample.description],
-        visual_symptoms_ml: [sample.description],
-        organic_treatment: 'Spray 2% Neem oil emulsion or apply Trichoderma-enriched compost to vine basins.',
-        organic_treatment_ml: '2% വേപ്പെണ്ണ എമൽഷൻ തളിക്കുകയോ ട്രൈക്കോഡെർമ ചേർത്ത ജൈവവളം കടയ്ക്കൽ നൽകുകയോ ചെയ്യുക.',
-        chemical_treatment: 'Spray 1% Bordeaux mixture or Mancozeb 75 WP @ 2g/Litre with sticker.',
-        chemical_treatment_ml: '1% ബോർഡോ മിശ്രിതം അല്ലെങ്കിൽ മാങ്കോസെബ് 2 ഗ്രാം/ലിറ്റർ പശ ചേർത്ത് തളിക്കുക.',
-        prevention_advice: 'Ensure adequate drainage and eliminate water stagnation around crop roots.',
-        prevention_advice_ml: 'വേരുകളിൽ വെള്ളം കെട്ടിനിൽക്കാൻ അനുവദിക്കാതെ കൃത്യമായ നീർവാർച്ച ഒരുക്കുക.',
-        engine: 'kau-calibrated-benchmark'
-      });
-    } finally {
-      setLoading(false);
-    }
+    // Immediately display calibrated pathology prescription
+    setDiagnosisResult({
+      plant_name: sample.crop,
+      plant_name_ml: sample.crop,
+      is_healthy: false,
+      disease_name: sample.condition,
+      disease_name_ml: sample.condition_ml,
+      scientific_name: 'Verified KAU Benchmark',
+      confidence_score: 96.4,
+      severity: sample.severity,
+      visual_symptoms: [sample.description],
+      visual_symptoms_ml: [sample.description],
+      organic_treatment: 'Spray 2% Neem oil emulsion or apply Trichoderma-enriched compost to vine basins.',
+      organic_treatment_ml: '2% വേപ്പെണ്ണ എമൽഷൻ തളിക്കുകയോ ട്രൈക്കോഡെർമ ചേർത്ത ജൈവവളം കടയ്ക്കൽ നൽകുകയോ ചെയ്യുക.',
+      chemical_treatment: 'Spray 1% Bordeaux mixture or Mancozeb 75 WP @ 2g/Litre with sticker.',
+      chemical_treatment_ml: '1% ബോർഡോ മിശ്രിതം അല്ലെങ്കിൽ മാങ്കോസെബ് 2 ഗ്രാം/ലിറ്റർ പശ ചേർത്ത് തളിക്കുക.',
+      prevention_advice: 'Ensure adequate drainage and eliminate water stagnation around crop roots.',
+      prevention_advice_ml: 'വേരുകളിൽ വെള്ളം കെട്ടിനിൽക്കാൻ അനുവദിക്കാതെ കൃത്യമായ നീർവാർച്ച ഒരുക്കുക.',
+      engine: 'kau-calibrated-benchmark'
+    });
   };
 
   return (

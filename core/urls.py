@@ -98,6 +98,10 @@ urlpatterns = [
 
     # Leaf Disease Detection & Computer Vision Endpoints
     path('leaf-disease/diagnose/', LeafDiseaseDiagnosisView.as_view(), name='leaf_disease_diagnose'),
+    path('leaf-disease/detect/', LeafDiseaseDiagnosisView.as_view(), name='leaf_disease_detect'),
+    path('leaf-disease/', LeafDiseaseDiagnosisView.as_view(), name='leaf_disease_base'),
+    path('leaf-doctor/diagnose/', LeafDiseaseDiagnosisView.as_view(), name='leaf_doctor_diagnose'),
+    path('leaf-doctor/', LeafDiseaseDiagnosisView.as_view(), name='leaf_doctor_base'),
     path('leaf-disease/samples/', LeafDiseaseSampleCasesView.as_view(), name='leaf_disease_samples'),
 ]
 
