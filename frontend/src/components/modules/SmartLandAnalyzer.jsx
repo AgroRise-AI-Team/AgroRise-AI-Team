@@ -55,12 +55,12 @@ export default function SmartLandAnalyzer() {
     fetchMetadata();
   }, []);
 
-  // When district changes, update recommended regional soil & slope without auto-submitting
+  // When districtProfiles metadata loads on mount, set defaults for the initial district
   useEffect(() => {
     if (districtProfiles[district]) {
-      applyDistrictDefaults(districtProfiles[district], false);
+      applyDistrictDefaults(districtProfiles[district], district, false);
     }
-  }, [district, districtProfiles]);
+  }, [districtProfiles]);
 
   const fetchMetadata = async () => {
     try {
@@ -73,8 +73,9 @@ export default function SmartLandAnalyzer() {
     }
   };
 
-  const applyDistrictDefaults = (prof, triggerRun = false) => {
+  const applyDistrictDefaults = (prof, targetDist = null, triggerRun = false) => {
     if (!prof) return;
+    const distToUse = targetDist || district;
     setSoilType(prof.recommended_soil || 'LATERITE');
     setLandSlope(prof.typical_slope || 'GENTLE');
     setWaterAvailability(prof.typical_water || 'MEDIUM');
@@ -84,13 +85,26 @@ export default function SmartLandAnalyzer() {
 
     if (triggerRun) {
       handleRunAnalysis(null, {
-        district,
+        district: distToUse,
         soilType: prof.recommended_soil || 'LATERITE',
         landSlope: prof.typical_slope || 'GENTLE',
         waterAvailability: prof.typical_water || 'MEDIUM',
         waterSource: prof.typical_water_source || 'OPEN_WELL',
         sunlight: prof.typical_sunlight || 'GOOD'
       });
+    }
+  };
+
+  // Centralized district change handler: instantly sets state, clears stale analysis, and re-analyzes
+  const handleDistrictChange = (newDistrict, autoRun = true) => {
+    setDistrict(newDistrict);
+    setAnalysisResult(null); // Clear previous district analysis immediately!
+
+    const prof = districtProfiles[newDistrict];
+    if (prof) {
+      applyDistrictDefaults(prof, newDistrict, autoRun);
+    } else if (autoRun) {
+      handleRunAnalysis(null, { district: newDistrict });
     }
   };
 
@@ -175,13 +189,22 @@ export default function SmartLandAnalyzer() {
     });
   };
 
-  // Current location intelligence
-  const currentLocIntel = analysisResult?.location_intelligence || districtProfiles[district] || {};
+  // Only accept analysisResult if it matches the currently selected district!
+  const isCurrentAnalysis = analysisResult && (
+    analysisResult.analysis_metadata?.district === district || 
+    analysisResult.location_intelligence?.district === district
+  );
+  const activeAnalysis = isCurrentAnalysis ? analysisResult : null;
+
+  // Current location intelligence strictly for the currently selected district!
+  const currentLocIntel = (activeAnalysis?.location_intelligence?.district === district
+    ? activeAnalysis.location_intelligence
+    : districtProfiles[district]) || {};
 
   // Filter crops
   const getFilteredCrops = () => {
-    if (!analysisResult?.ranked_crops) return [];
-    let list = [...analysisResult.ranked_crops];
+    if (!activeAnalysis?.ranked_crops) return [];
+    let list = [...activeAnalysis.ranked_crops];
     if (selectedCropFilter === 'signature') {
       return list.filter(c => c.is_signature_culture);
     }
@@ -195,7 +218,7 @@ export default function SmartLandAnalyzer() {
   };
 
   const filteredCrops = getFilteredCrops();
-  const topCrop = analysisResult?.ranked_crops?.[0];
+  const topCrop = activeAnalysis?.ranked_crops?.[0];
 
   return (
     <div className="smart-land-analyzer-container" style={{ padding: '20px 24px', maxWidth: '1380px', margin: '0 auto', fontFamily: 'inherit' }}>
@@ -450,11 +473,7 @@ export default function SmartLandAnalyzer() {
               <select
                 value={district}
                 onChange={(e) => {
-                  const newDist = e.target.value;
-                  setDistrict(newDist);
-                  if (districtProfiles[newDist]) {
-                    applyDistrictDefaults(districtProfiles[newDist], true);
-                  }
+                  handleDistrictChange(e.target.value, true);
                 }}
                 style={{
                   width: '100%',
@@ -492,10 +511,7 @@ export default function SmartLandAnalyzer() {
             <LeafletLocationPicker
               selectedDistrict={district}
               onSelectDistrict={(newDist) => {
-                setDistrict(newDist);
-                if (districtProfiles[newDist]) {
-                  applyDistrictDefaults(districtProfiles[newDist], false);
-                }
+                handleDistrictChange(newDist, true);
               }}
             />
 
@@ -822,7 +838,7 @@ export default function SmartLandAnalyzer() {
                     📍 Location Intelligence & Agro-Climatic Zone
                   </span>
                   <h3 style={{ margin: '2px 0 0 0', fontSize: '1.25rem', fontWeight: '800', color: '#0f172a' }}>
-                    {currentLocIntel.district || district} ({currentLocIntel.zone_ml || 'കാർഷിക മേഖല'})
+                    {district} ({currentLocIntel.zone_ml || 'കാർഷിക മേഖല'})
                   </h3>
                   <div style={{ fontSize: '0.82rem', color: '#64748b' }}>
                     {currentLocIntel.climate_description || currentLocIntel.zone}
@@ -831,8 +847,8 @@ export default function SmartLandAnalyzer() {
 
                 <div style={{ textAlign: 'right' }}>
                   <div style={{ fontSize: '0.74rem', color: '#64748b', fontWeight: '700' }}>Confidence</div>
-                  <div style={{ fontSize: '1.3rem', fontWeight: '900', color: analysisResult?.analysis_metadata?.confidence_score >= 80 ? '#15803d' : '#b45309' }}>
-                    {analysisResult?.analysis_metadata?.confidence_score || 85}%
+                  <div style={{ fontSize: '1.3rem', fontWeight: '900', color: (activeAnalysis?.analysis_metadata?.confidence_score || 85) >= 80 ? '#15803d' : '#b45309' }}>
+                    {activeAnalysis?.analysis_metadata?.confidence_score || 85}%
                   </div>
                 </div>
               </div>
@@ -870,8 +886,8 @@ export default function SmartLandAnalyzer() {
             </div>
           )}
 
-          {/* EMPTY STATE: Shown until user clicks Analyze */}
-          {!analysisResult && !loading && (
+          {/* EMPTY STATE: Shown until user clicks Analyze or auto-runs */}
+          {!activeAnalysis && !loading && (
             <div style={{
               background: '#ffffff',
               borderRadius: '16px',
@@ -892,7 +908,7 @@ export default function SmartLandAnalyzer() {
           )}
 
           {/* Missing Information Alerts */}
-          {analysisResult?.missing_information && analysisResult.missing_information.length > 0 && (
+          {activeAnalysis?.missing_information && activeAnalysis.missing_information.length > 0 && (
             <div style={{
               background: '#fffdf5',
               borderRadius: '14px',
@@ -906,7 +922,7 @@ export default function SmartLandAnalyzer() {
                   Notice for {district}: Missing Soil Information
                 </strong>
               </div>
-              {analysisResult.missing_information.map((item, idx) => (
+              {activeAnalysis.missing_information.map((item, idx) => (
                 <div key={idx} style={{ fontSize: '0.8rem', color: '#713f12', lineHeight: 1.45, marginBottom: '6px' }}>
                   • <strong>{item.field}:</strong> {item.impact} <br />
                   <span style={{ color: '#15803d', fontWeight: '600' }}>💡 Action: {item.recommendation}</span>
