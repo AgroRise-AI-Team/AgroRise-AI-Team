@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { smartLandAnalyzerApi } from '../../services/api';
 import { useAuth } from '../../context/AuthContext';
-import { KERALA_DISTRICTS } from '../../constants/enums';
+import { KERALA_DISTRICTS, DEFAULT_DISTRICT_PROFILES } from '../../constants/enums';
 import LeafletLocationPicker from '../common/LeafletLocationPicker';
 
 
@@ -47,7 +47,7 @@ export default function SmartLandAnalyzer() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
   const [analysisResult, setAnalysisResult] = useState(null); // Starts NULL on initial load: only calculated on user request
-  const [districtProfiles, setDistrictProfiles] = useState({});
+  const [districtProfiles, setDistrictProfiles] = useState(DEFAULT_DISTRICT_PROFILES || {});
   const [selectedCropFilter, setSelectedCropFilter] = useState('all'); // 'all', 'signature', 'high_return', 'short_duration'
 
   // Fetch metadata on mount
@@ -57,8 +57,9 @@ export default function SmartLandAnalyzer() {
 
   // When districtProfiles metadata loads on mount, set defaults for the initial district
   useEffect(() => {
-    if (districtProfiles[district]) {
-      applyDistrictDefaults(districtProfiles[district], district, false);
+    const prof = districtProfiles[district] || DEFAULT_DISTRICT_PROFILES[district];
+    if (prof) {
+      applyDistrictDefaults(prof, district, false);
     }
   }, [districtProfiles]);
 
@@ -66,7 +67,7 @@ export default function SmartLandAnalyzer() {
     try {
       const meta = await smartLandAnalyzerApi.getMetadata();
       if (meta?.district_profiles) {
-        setDistrictProfiles(meta.district_profiles);
+        setDistrictProfiles(prev => ({ ...prev, ...meta.district_profiles }));
       }
     } catch (e) {
       console.warn('Metadata fetch fallback:', e);
@@ -76,21 +77,28 @@ export default function SmartLandAnalyzer() {
   const applyDistrictDefaults = (prof, targetDist = null, triggerRun = false) => {
     if (!prof) return;
     const distToUse = targetDist || district;
-    setSoilType(prof.recommended_soil || 'LATERITE');
-    setLandSlope(prof.typical_slope || 'GENTLE');
-    setWaterAvailability(prof.typical_water || 'MEDIUM');
-    setWaterSource(prof.typical_water_source || 'OPEN_WELL');
-    setSunlight(prof.typical_sunlight || 'GOOD');
+    const recSoil = prof.recommended_soil || 'LATERITE';
+    const recSlope = prof.typical_slope || 'GENTLE';
+    const recWater = prof.typical_water || 'MEDIUM';
+    const recWaterSrc = prof.typical_water_source || 'OPEN_WELL';
+    const recSun = prof.typical_sunlight || 'GOOD';
+
+    setSoilType(recSoil);
+    setLandSlope(recSlope);
+    setWaterAvailability(recWater);
+    setWaterSource(recWaterSrc);
+    setSunlight(recSun);
     setSoilTypeConfirmed(true);
 
     if (triggerRun) {
       handleRunAnalysis(null, {
         district: distToUse,
-        soilType: prof.recommended_soil || 'LATERITE',
-        landSlope: prof.typical_slope || 'GENTLE',
-        waterAvailability: prof.typical_water || 'MEDIUM',
-        waterSource: prof.typical_water_source || 'OPEN_WELL',
-        sunlight: prof.typical_sunlight || 'GOOD'
+        soilType: recSoil,
+        landSlope: recSlope,
+        waterAvailability: recWater,
+        waterSource: recWaterSrc,
+        sunlight: recSun,
+        soilTypeConfirmed: true
       });
     }
   };
@@ -100,7 +108,7 @@ export default function SmartLandAnalyzer() {
     setDistrict(newDistrict);
     setAnalysisResult(null); // Clear previous district analysis immediately!
 
-    const prof = districtProfiles[newDistrict];
+    const prof = districtProfiles[newDistrict] || DEFAULT_DISTRICT_PROFILES[newDistrict];
     if (prof) {
       applyDistrictDefaults(prof, newDistrict, autoRun);
     } else if (autoRun) {
@@ -122,6 +130,9 @@ export default function SmartLandAnalyzer() {
     const activeWater = overrideData.waterAvailability || waterAvailability;
     const activeWaterSource = overrideData.waterSource || waterSource;
     const activeSunlight = overrideData.sunlight || sunlight;
+    const activeSoilConfirmed = overrideData.soilTypeConfirmed !== undefined
+      ? overrideData.soilTypeConfirmed
+      : soilTypeConfirmed;
 
     const soilPayload = {};
     if (hasSoilTest) {
@@ -138,7 +149,7 @@ export default function SmartLandAnalyzer() {
       land_area: parseFloat(landArea) || 20,
       land_area_unit: landAreaUnit,
       soil_type: activeSoil,
-      soil_type_confirmed: soilTypeConfirmed,
+      soil_type_confirmed: activeSoilConfirmed,
       has_soil_test: hasSoilTest,
       soil_test_values: soilPayload,
       water_availability: activeWater,
@@ -178,6 +189,7 @@ export default function SmartLandAnalyzer() {
     setSunlight(preset.sunlight);
     setLandSlope(preset.land_slope);
     setHasSoilTest(false);
+    setAnalysisResult(null); // Clear stale analysis
 
     handleRunAnalysis(null, {
       district: preset.district,
@@ -185,21 +197,25 @@ export default function SmartLandAnalyzer() {
       landSlope: preset.land_slope,
       waterAvailability: preset.water_availability,
       waterSource: preset.water_source,
-      sunlight: preset.sunlight
+      sunlight: preset.sunlight,
+      soilTypeConfirmed: preset.soil_type_confirmed
     });
   };
 
-  // Only accept analysisResult if it matches the currently selected district!
+  // Only accept analysisResult if it strictly matches the currently selected district!
   const isCurrentAnalysis = analysisResult && (
-    analysisResult.analysis_metadata?.district === district || 
-    analysisResult.location_intelligence?.district === district
+    (analysisResult.location_intelligence?.district && analysisResult.location_intelligence.district.toLowerCase() === district.toLowerCase()) ||
+    (analysisResult.input_summary?.district && analysisResult.input_summary.district.toLowerCase() === district.toLowerCase()) ||
+    (analysisResult.analysis_metadata?.district && analysisResult.analysis_metadata.district.toLowerCase() === district.toLowerCase())
   );
   const activeAnalysis = isCurrentAnalysis ? analysisResult : null;
 
   // Current location intelligence strictly for the currently selected district!
-  const currentLocIntel = (activeAnalysis?.location_intelligence?.district === district
-    ? activeAnalysis.location_intelligence
-    : districtProfiles[district]) || {};
+  const currentLocIntel = (
+    (activeAnalysis?.location_intelligence?.district?.toLowerCase() === district.toLowerCase())
+      ? activeAnalysis.location_intelligence
+      : (districtProfiles[district] || DEFAULT_DISTRICT_PROFILES[district] || {})
+  );
 
   // Filter crops
   const getFilteredCrops = () => {

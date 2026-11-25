@@ -675,6 +675,7 @@ class SmartLandAnalyzer:
                 "has_soil_test": has_soil_test
             },
             "analysis_metadata": {
+                "district": district,
                 "confidence_score": confidence_score,
                 "confidence_level": "High Confidence" if confidence_score >= 85 else ("Moderate Confidence" if confidence_score >= 70 else "Preliminary / Low Confidence"),
                 "total_crops_evaluated": len(CROPS_DATABASE),
