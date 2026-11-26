@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import LeftShowcase from './LeftShowcase';
 import LoginModal from './LoginModal';
 import RegisterModal from './RegisterModal';
+import SnowEffect from './SnowEffect';
 import { useAuth } from '../context/AuthContext';
 import { SproutLogo } from './Icons';
 
@@ -107,9 +108,10 @@ export default function EntryPage() {
         </div>
       </header>
 
-      {/* 2. Full-Screen Cinematic Sunrise Paddy Hero Section (Clean Wide Visual) */}
+      {/* 2. Full-Screen Cinematic Sunrise Paddy Hero Section (Clean Wide Visual with Falling Snow Effect) */}
       <section className="landing-hero-fullscreen">
         <div className="hero-background-overlay" />
+        <SnowEffect count={110} />
         
         {/* Elegant Animated Scroll Down Prompt */}
         <div className="hero-scroll-prompt" onClick={scrollToFeatures}>
