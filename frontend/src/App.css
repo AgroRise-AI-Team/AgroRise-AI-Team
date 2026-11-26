@@ -183,8 +183,10 @@
 .mockup-viewport {
   position: relative;
   overflow: hidden;
-  height: 255px;
+  height: 290px;
   background: #11291b;
+  border-bottom-left-radius: 12px;
+  border-bottom-right-radius: 12px;
 }
 
 .farm-image {

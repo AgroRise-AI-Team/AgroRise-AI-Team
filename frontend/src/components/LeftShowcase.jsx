@@ -7,9 +7,9 @@ export default function LeftShowcase() {
   const [activePin, setActivePin] = useState(null);
 
   const telemetryPins = [
-    { id: 1, x: '22%', y: '38%', label: 'Drone Alpha-04: Aerial NDVI Scan' },
-    { id: 2, x: '35%', y: '68%', label: 'Sensor Grid B: Moisture 78% (Optimal)' },
-    { id: 3, x: '72%', y: '62%', label: 'Smart Greenhouses: Climate Regulated' }
+    { id: 1, x: '24%', y: '28%', label: 'Drone Alpha-04: Aerial NDVI Crop Scan' },
+    { id: 2, x: '78%', y: '72%', label: 'Sensor Node B: Soil Moisture 78% (Optimal)' },
+    { id: 3, x: '52%', y: '56%', label: 'Precision Irrigation: Micro-Sprinkler Zone' }
   ];
 
   return (
