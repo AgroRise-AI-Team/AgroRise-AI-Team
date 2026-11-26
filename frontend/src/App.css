@@ -4642,19 +4642,35 @@
 /* 2. Full-Screen Cinematic Sunrise Paddy Hero Section */
 .landing-hero-fullscreen {
   position: relative;
-  min-height: 100vh;
-  min-height: 100dvh;
+  min-height: 125vh;
+  min-height: 125dvh;
   display: flex;
   flex-direction: column;
   align-items: center;
-  justify-content: flex-end;
+  justify-content: center;
   text-align: center;
   background-image: url('/sunrise-paddy-hero.jpg');
   background-size: cover;
   background-position: center center;
   background-repeat: no-repeat;
-  padding: 0 24px 38px 24px;
+  padding: 0 24px;
   box-sizing: border-box;
+}
+
+.scroll-revealed-center-branding {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 50;
+  max-width: 920px;
+  width: 90%;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  transition: opacity 0.2s cubic-bezier(0.16, 1, 0.3, 1), transform 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+  will-change: opacity, transform;
 }
 
 .hero-background-overlay {

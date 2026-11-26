@@ -11,11 +11,14 @@ export default function EntryPage() {
   const [loginOpen, setLoginOpen] = useState(false);
   const [registerOpen, setRegisterOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
+  const [scrollY, setScrollY] = useState(0);
 
-  // Monitor scroll position to adapt transparent navbar styling
+  // Monitor scroll position to adapt transparent navbar styling and center logo reveal
   useEffect(() => {
     const handleScroll = () => {
-      if (window.scrollY > 80) {
+      const y = window.scrollY;
+      setScrollY(y);
+      if (y > 70) {
         setScrolled(true);
       } else {
         setScrolled(false);
@@ -24,6 +27,23 @@ export default function EntryPage() {
     window.addEventListener('scroll', handleScroll, { passive: true });
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
+
+  // Calculate reveal progress for center project name when user scrolls
+  let revealProgress = 0;
+  if (scrollY < 20) {
+    revealProgress = 0;
+  } else if (scrollY < 180) {
+    revealProgress = (scrollY - 20) / 160;
+  } else if (scrollY <= 550) {
+    revealProgress = 1.0;
+  } else if (scrollY < 800) {
+    revealProgress = Math.max(0, 1.0 - (scrollY - 550) / 250);
+  } else {
+    revealProgress = 0;
+  }
+
+  const centerOpacity = revealProgress;
+  const centerScale = 0.88 + revealProgress * 0.12;
 
   const scrollToFeatures = () => {
     const el = document.getElementById('landing-features-section');
@@ -108,24 +128,21 @@ export default function EntryPage() {
         </div>
       </header>
 
-      {/* 2. Full-Screen Cinematic Sunrise Paddy Hero Section (Clean Wide Visual with Falling Snow Effect) */}
+      {/* 2. Full-Screen Cinematic Sunrise Paddy Hero Section (Clean Wide Visual with Falling Fog Effect) */}
       <section className="landing-hero-fullscreen">
         <div className="hero-background-overlay" />
-        <SnowEffect count={110} />
-        
-        {/* Elegant Animated Scroll Down Prompt */}
-        <div className="hero-scroll-prompt" onClick={scrollToFeatures}>
-          <div className="mouse-scroll-icon">
-            <div className="scroll-wheel"></div>
-          </div>
-          <span>{language === 'ml' ? 'താഴേക്ക് സ്ക്രോൾ ചെയ്യുക' : 'Scroll down to explore'}</span>
-        </div>
-      </section>
+        <SnowEffect />
 
-      {/* 3. When Scrolled: Center Project Name Branding & Core Capabilities */}
-      <section id="landing-features-section" className="landing-features-container">
-        <div className="features-header-box">
-          {/* Top Pill Tag */}
+        {/* Scroll-Revealed Center Project Name: perfectly displays when scrolled */}
+        <div 
+          className="scroll-revealed-center-branding"
+          style={{
+            opacity: centerOpacity,
+            transform: `translate(-50%, -50%) scale(${centerScale})`,
+            pointerEvents: centerOpacity > 0.4 ? 'auto' : 'none',
+            visibility: centerOpacity <= 0.01 ? 'hidden' : 'visible',
+          }}
+        >
           <div className="hero-status-badge">
             <span className="pulse-green-dot"></span>
             <span>
@@ -135,24 +152,45 @@ export default function EntryPage() {
             </span>
           </div>
 
-          {/* Central Prominent Project Name on Scroll */}
           <h1 className="hero-project-title">
             <span className="title-gradient">AgroRise</span>{' '}
             <span className="title-highlight">AI</span>
           </h1>
 
-          {/* Malayalam Brand Accent */}
           <div className="hero-ml-subheading">
             {language === 'ml' ? 'അഗ്രോറൈസ് എ.ഐ • കൃഷിയിടത്തിൽ പുതിയ സാങ്കേതിക വിപ്ലവം' : 'Empowering Kerala Agriculture with Precision Intelligence'}
           </div>
 
-          {/* Hero Mission Description */}
           <p className="hero-description-text">
             {language === 'ml'
-              ? 'മണ്ണിന്റെ തരം, പി.എച്ച്, കാലാവസ്ഥ എന്നിവ വിശകലനം ചെയ്ത് അനുയോജ്യമായ വിളകൾ ശുപാർശ ചെയ്യാനും, ഇലരോഗങ്ങൾ തിരിച്ചറിയാനും, വിള ലാഭം മുൻകൂട്ടി കണക്കാക്കാനും സഹായിക്കുന്ന സമഗ്ര കാർഷിക കൂട്ടുകാരൻ.'
+              ? 'മണ്ണിന്റെ തരം, പി.എച്ച്, കാലാവസ്ഥ എന്നിവ വിശകലനം ചെയ്ത് അനുയോജ്യമായ വിളകൾ ശുപാർശ ചെയ്യാനും, ഇലരോഗങ്ങൾ തിരിച്ചറിയാനും സഹായിക്കുന്ന സമഗ്ര കാർഷിക കൂട്ടുകാരൻ.'
               : 'Your synchronized farming companion. Harness smart land analysis, computer vision plant pathology, yield profitability forecasting, and 24/7 bilingual voice assistance in one unified hub.'}
           </p>
 
+          <div className="hero-actions-group">
+            <button
+              type="button"
+              className="hero-primary-btn"
+              onClick={() => setLoginOpen(true)}
+            >
+              <span>{language === 'ml' ? '🚀 അഗ്രോറൈസിലേക്ക് പ്രവേശിക്കുക (Sign In)' : '🚀 Sign In to Dashboard'}</span>
+              <span className="btn-arrow">→</span>
+            </button>
+
+            <button
+              type="button"
+              className="hero-secondary-btn"
+              onClick={() => setRegisterOpen(true)}
+            >
+              <span>{language === 'ml' ? '🌱 പുതിയ കർഷക രജിസ്ട്രേഷൻ' : '🌱 Register Farmer Account'}</span>
+            </button>
+          </div>
+        </div>
+      </section>
+
+      {/* 3. Core Capabilities Section */}
+      <section id="landing-features-section" className="landing-features-container">
+        <div className="features-header-box">
           <span className="section-pill-tag">
             {language === 'ml' ? 'എ.ഐ സവിശേഷതകൾ' : 'Intelligent Core Capabilities'}
           </span>
