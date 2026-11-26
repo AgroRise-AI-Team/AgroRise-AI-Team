@@ -107,11 +107,22 @@ export default function EntryPage() {
         </div>
       </header>
 
-      {/* 2. Full-Screen Cinematic Sunrise Paddy Hero Section */}
+      {/* 2. Full-Screen Cinematic Sunrise Paddy Hero Section (Clean Wide Visual) */}
       <section className="landing-hero-fullscreen">
         <div className="hero-background-overlay" />
         
-        <div className="hero-center-content">
+        {/* Elegant Animated Scroll Down Prompt */}
+        <div className="hero-scroll-prompt" onClick={scrollToFeatures}>
+          <div className="mouse-scroll-icon">
+            <div className="scroll-wheel"></div>
+          </div>
+          <span>{language === 'ml' ? 'താഴേക്ക് സ്ക്രോൾ ചെയ്യുക' : 'Scroll down to explore'}</span>
+        </div>
+      </section>
+
+      {/* 3. When Scrolled: Center Project Name Branding & Core Capabilities */}
+      <section id="landing-features-section" className="landing-features-container">
+        <div className="features-header-box">
           {/* Top Pill Tag */}
           <div className="hero-status-badge">
             <span className="pulse-green-dot"></span>
@@ -122,7 +133,7 @@ export default function EntryPage() {
             </span>
           </div>
 
-          {/* Central Prominent Project Name */}
+          {/* Central Prominent Project Name on Scroll */}
           <h1 className="hero-project-title">
             <span className="title-gradient">AgroRise</span>{' '}
             <span className="title-highlight">AI</span>
@@ -140,47 +151,6 @@ export default function EntryPage() {
               : 'Your synchronized farming companion. Harness smart land analysis, computer vision plant pathology, yield profitability forecasting, and 24/7 bilingual voice assistance in one unified hub.'}
           </p>
 
-          {/* Hero Action Buttons */}
-          <div className="hero-actions-group">
-            <button
-              type="button"
-              className="hero-primary-btn"
-              onClick={() => setLoginOpen(true)}
-            >
-              <span>{language === 'ml' ? '🚀 അഗ്രോറൈസിലേക്ക് പ്രവേശിക്കുക (Sign In)' : '🚀 Sign In to Dashboard'}</span>
-              <span className="btn-arrow">→</span>
-            </button>
-
-            <button
-              type="button"
-              className="hero-secondary-btn"
-              onClick={() => setRegisterOpen(true)}
-            >
-              <span>{language === 'ml' ? '🌱 പുതിയ കർഷക രജിസ്ട്രേഷൻ' : '🌱 Register Farmer Account'}</span>
-            </button>
-
-            <button
-              type="button"
-              className="hero-explore-btn"
-              onClick={scrollToFeatures}
-            >
-              <span>{language === 'ml' ? 'ഫീച്ചറുകൾ കാണുക ↓' : 'Explore Features ↓'}</span>
-            </button>
-          </div>
-
-          {/* Animated Scroll Down Indicator */}
-          <div className="hero-scroll-prompt" onClick={scrollToFeatures}>
-            <div className="mouse-scroll-icon">
-              <div className="scroll-wheel"></div>
-            </div>
-            <span>{language === 'ml' ? 'കൂടുതൽ അറിയാൻ താഴേക്ക് സ്ക്രോൾ ചെയ്യുക' : 'Scroll down to explore features'}</span>
-          </div>
-        </div>
-      </section>
-
-      {/* 3. Key Smart AI Features Showcase Grid */}
-      <section id="landing-features-section" className="landing-features-container">
-        <div className="features-header-box">
           <span className="section-pill-tag">
             {language === 'ml' ? 'എ.ഐ സവിശേഷതകൾ' : 'Intelligent Core Capabilities'}
           </span>
